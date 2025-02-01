@@ -2,7 +2,6 @@ package com.banco.xyz.financeiro.controller;
 
 import com.banco.xyz.financeiro.dto.UsuarioAtualizarDTO;
 import com.banco.xyz.financeiro.dto.UsuarioDTO;
-import com.banco.xyz.financeiro.model.Usuario;
 import com.banco.xyz.financeiro.recod.UsuarioRecord;
 import com.banco.xyz.financeiro.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -10,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/usuario")
@@ -39,7 +40,7 @@ public class UsuarioController {
     @PostMapping()
     public ResponseEntity<String> savarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
 
-        return ResponseEntity.ok(usuarioService.savarUsuario(usuarioDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.savarUsuario(usuarioDTO));
 
     }
 
@@ -48,5 +49,11 @@ public class UsuarioController {
 
 
         return ResponseEntity.ok(usuarioService.atualizarUsuario(usuarioAtualizar));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> excluirUsuario(@PathVariable("id") Long id){
+
+        return usuarioService.excluirUsuario(id);
     }
 }

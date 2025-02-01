@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,7 +47,7 @@ public class UsuarioService {
         usuario.setDataCriacao(LocalDateTime.now());
 
         usuarioRepository.save(usuario);
-        return "Salvo com Sucesso";
+        return "Salvo com Sucesso!";
     }
 
     public String atualizarUsuario(UsuarioAtualizarDTO usuarioAtualizar){
@@ -56,7 +58,20 @@ public class UsuarioService {
         usuario.setPerfil(usuarioAtualizar.getPerfil());
 
         usuarioRepository.save(usuario);
-        return "Atualizado com Sucesso";
+        return "Atualizado com Sucesso!";
+    }
+
+    public ResponseEntity<String> excluirUsuario(Long id){
+
+        Usuario usuario = usuarioRepository.getReferenceById(id);
+
+        if(usuario.getId() == null){
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario nao encontrado");
+        }
+
+        usuarioRepository.delete(usuario);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuario excluido com Sucesso!");
     }
 
 }
