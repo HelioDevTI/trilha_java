@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: financeiro
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/financeiro
+    username: userDB
+    password: 12345
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
