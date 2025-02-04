@@ -66,11 +66,11 @@ public class ContaService {
 
         if(conta.getId() == null){
 
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario nao encontrado");
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta nao encontrada");
         }
 
         contaRepository.delete(conta);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuario excluido com Sucesso!");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Conta excluida com Sucesso!");
 
     }
 
