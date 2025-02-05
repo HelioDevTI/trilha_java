@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.TipoTransacaoDTO;
 import com.banco.xyz.financeiro.model.TipoTransacao;
 import com.banco.xyz.financeiro.recod.TipoTransacaoRecord;
 import com.banco.xyz.financeiro.repository.TipoTransacaoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class TipoTransacaoService {
 
         return tipoTransacaoRepository.findById(idTipo).map(tipo -> new TipoTransacaoRecord(tipo.getMoeda(),
                         tipo.getDescricao(), tipo.getAtivo(), tipo.getTipo(), tipo.getDataCriacao()))
-                .orElseGet(null);
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public Page<TipoTransacaoRecord> listaTipoTransacao(Pageable paginacao){

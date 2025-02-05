@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.LoginDTO;
 import com.banco.xyz.financeiro.model.Login;
 import com.banco.xyz.financeiro.recod.LoginRecord;
 import com.banco.xyz.financeiro.repository.LoginRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,8 @@ public class LoginService {
 
         return loginRepository.findById(idLogin)
                 .map(log -> new LoginRecord(log.getIdUsuario(), log.getEmail(),
-                        log.getSenha(), log.getDataLogin(), log.getDataAutlizacao())).orElseGet(null);
+                        log.getSenha(), log.getDataLogin(), log.getDataAutlizacao()))
+                .orElseThrow(EntityNotFoundException::new);
 
 
 

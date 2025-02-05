@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.ContaDTO;
 import com.banco.xyz.financeiro.model.Conta;
 import com.banco.xyz.financeiro.recod.ContaRecord;
 import com.banco.xyz.financeiro.repository.ContaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public class ContaService {
         return contaRepository.findById(idConta).map(cot -> new ContaRecord(cot.getIdUsuario(),
                 cot.getNumero(), cot.getDigito(), cot.getAgencia(), cot.getSaldo(),
                         cot.getDataCriacao()))
-                .orElseGet(null);
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public Page<ContaRecord> listaConta(Pageable paginacao){

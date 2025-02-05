@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.UsuarioDTO;
 import com.banco.xyz.financeiro.model.Usuario;
 import com.banco.xyz.financeiro.recod.UsuarioRecord;
 import com.banco.xyz.financeiro.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class UsuarioService {
 
         return usuarioRepository.findById(idUsuairo)
                 .map(usu -> new UsuarioRecord(usu.getNome(), usu.getPerfil(), usu.getCpf(),
-                        usu.getDataCriacao())).orElseGet(null);
+                        usu.getDataCriacao())).orElseThrow(EntityNotFoundException::new);
 
 
 
