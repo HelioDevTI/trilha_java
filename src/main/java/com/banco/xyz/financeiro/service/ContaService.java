@@ -25,7 +25,7 @@ public class ContaService {
 
     public ContaRecord getConta(Long idConta){
 
-        return contaRepository.findById(idConta).map(cot -> new ContaRecord(cot.getIdUsuario(),
+        return contaRepository.findById(idConta).map(cot -> new ContaRecord(cot.getId(), cot.getIdUsuario(),
                 cot.getNumero(), cot.getDigito(), cot.getAgencia(), cot.getSaldo(),
                         cot.getDataCriacao()))
                 .orElseThrow(EntityNotFoundException::new);
@@ -33,7 +33,7 @@ public class ContaService {
 
     public Page<ContaRecord> listaConta(Pageable paginacao){
 
-        return contaRepository.findAll(paginacao).map(cot -> new ContaRecord(cot.getIdUsuario(),
+        return contaRepository.findAll(paginacao).map(cot -> new ContaRecord(cot.getId(), cot.getIdUsuario(),
                 cot.getNumero(), cot.getDigito(), cot.getAgencia(), cot.getSaldo(),
                 cot.getDataCriacao()));
     }

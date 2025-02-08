@@ -24,7 +24,7 @@ public class LoginService {
     public LoginRecord getLogin(Long idLogin){
 
         return loginRepository.findById(idLogin)
-                .map(log -> new LoginRecord(log.getIdUsuario(), log.getEmail(),
+                .map(log -> new LoginRecord(log.getId(), log.getIdUsuario(), log.getEmail(),
                         log.getSenha(), log.getDataLogin(), log.getDataAutlizacao()))
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -34,7 +34,7 @@ public class LoginService {
 
     public Page<LoginRecord> listaLogins(Pageable paginacao){
 
-        return loginRepository.findAll(paginacao).map(log -> new LoginRecord(log.getIdUsuario(), log.getEmail(),
+        return loginRepository.findAll(paginacao).map(log -> new LoginRecord(log.getId(), log.getIdUsuario(), log.getEmail(),
                 log.getSenha(), log.getDataLogin(), log.getDataAutlizacao()));
     }
 

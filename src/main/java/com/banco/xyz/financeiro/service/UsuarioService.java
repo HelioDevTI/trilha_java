@@ -6,7 +6,6 @@ import com.banco.xyz.financeiro.model.Usuario;
 import com.banco.xyz.financeiro.recod.UsuarioRecord;
 import com.banco.xyz.financeiro.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -26,7 +24,7 @@ public class UsuarioService {
     public UsuarioRecord getUsuario(Long idUsuairo){
 
         return usuarioRepository.findById(idUsuairo)
-                .map(usu -> new UsuarioRecord(usu.getNome(), usu.getPerfil(), usu.getCpf(),
+                .map(usu -> new UsuarioRecord(usu.getId(), usu.getNome(), usu.getPerfil(), usu.getCpf(),
                         usu.getDataCriacao())).orElseThrow(EntityNotFoundException::new);
 
 
@@ -35,8 +33,8 @@ public class UsuarioService {
 
     public Page<UsuarioRecord> listaUsuarios(Pageable paginacao){
 
-        return usuarioRepository.findAll(paginacao).map(u -> new UsuarioRecord(u.getNome(), u.getPerfil(),
-                u.getCpf(),  u.getDataCriacao()));
+        return usuarioRepository.findAll(paginacao).map(usu -> new UsuarioRecord(usu.getId(), usu.getNome(),
+                usu.getPerfil(), usu.getCpf(),  usu.getDataCriacao()));
     }
 
     public String savarUsuario(UsuarioDTO usuarioDTO){
