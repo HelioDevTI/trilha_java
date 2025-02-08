@@ -31,7 +31,7 @@ public class UsuarioController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<UsuarioRecord>> listaUsuario(@PageableDefault(size = 10, sort = {"nome"})Pageable paginacao){
+    public ResponseEntity<Page<UsuarioRecord>> listaUsuario(@PageableDefault(page = 0, size = 10, sort = {"nome"})Pageable paginacao){
 
         return ResponseEntity.ok(usuarioService.listaUsuarios(paginacao));
 

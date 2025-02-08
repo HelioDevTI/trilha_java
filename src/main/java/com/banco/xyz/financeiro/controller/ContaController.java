@@ -28,7 +28,7 @@ public class ContaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ContaRecord>> listaConta(@PageableDefault(size = 10, sort = {"numero"})Pageable paginacao){
+    public ResponseEntity<Page<ContaRecord>> listaConta(@PageableDefault(page = 0, size = 10, sort = {"numero"})Pageable paginacao){
 
         return ResponseEntity.ok(contaService.listaConta(paginacao));
     }

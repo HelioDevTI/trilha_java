@@ -27,7 +27,7 @@ public class TransacaoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<TransacaoRecord>> listatransacao(@PageableDefault(size = 10, sort = {"idConta"}) Pageable paginacao){
+    public ResponseEntity<Page<TransacaoRecord>> listatransacao(@PageableDefault(page = 0, size = 10, sort = {"idConta"}) Pageable paginacao){
 
         return ResponseEntity.ok(transacaoService.listaTransacao(paginacao));
     }

@@ -27,7 +27,7 @@ public class LoginController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<LoginRecord>> listaLogins(@PageableDefault(size = 10, sort = {"email"})Pageable paginacao){
+    public ResponseEntity<Page<LoginRecord>> listaLogins(@PageableDefault(page = 0, size = 10, sort = {"email"})Pageable paginacao){
 
         return ResponseEntity.ok(loginService.listaLogins(paginacao));
     }
