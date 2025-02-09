@@ -1,7 +1,11 @@
 package com.banco.xyz.financeiro.security;
 
 import com.banco.xyz.financeiro.model.Login;
+import com.banco.xyz.financeiro.model.Perfil;
+import com.banco.xyz.financeiro.model.Usuario;
 import com.banco.xyz.financeiro.repository.LoginRepository;
+import com.banco.xyz.financeiro.repository.PerfilRepository;
+import com.banco.xyz.financeiro.repository.UsuarioRepository;
 import com.banco.xyz.financeiro.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,6 +28,12 @@ public class FiltroSegurancaRequisicao extends OncePerRequestFilter {
     @Autowired
     private LoginRepository loginRepository;
 
+    @Autowired
+    private PerfilRepository perfilRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -37,7 +47,13 @@ public class FiltroSegurancaRequisicao extends OncePerRequestFilter {
             Login login = loginRepository.findByEmail(usuario)
                     .orElseThrow(() -> new RuntimeException("Usuario nao encontrado no token"));
 
-            UsuarioAutenticacao usuarioAutenticacao = new UsuarioAutenticacao(login);
+            Usuario usuarioBanco = usuarioRepository.findById(login.getIdUsuario())
+                    .orElseThrow(() -> new RuntimeException("Usuario nao encontrado no token"));;
+
+            Perfil perfil = perfilRepository.findById(usuarioBanco.getPerfil())
+                    .orElseThrow(() -> new RuntimeException("Usuario sem perfil"));
+
+            UsuarioAutenticacao usuarioAutenticacao = new UsuarioAutenticacao(login, perfil.getTipo());
 
             var autenticacao = new UsernamePasswordAuthenticationToken(usuarioAutenticacao, null, usuarioAutenticacao.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(autenticacao);
