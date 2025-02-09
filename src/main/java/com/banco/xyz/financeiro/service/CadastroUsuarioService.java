@@ -12,6 +12,7 @@ import com.banco.xyz.financeiro.repository.ContaRepository;
 import com.banco.xyz.financeiro.repository.LoginRepository;
 import com.banco.xyz.financeiro.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,9 @@ public class CadastroUsuarioService {
 
     @Autowired
     private LoginRepository loginRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public DadosCorrentistaDTO cadastroCorrentista(CorrentistaRecord correntista){
 
@@ -47,7 +51,7 @@ public class CadastroUsuarioService {
 
 
         Login login = new Login(null, usarioSalvo.getId(), correntista.email(),
-                correntista.senha(), null, dataAtual);
+                passwordEncoder.encode(correntista.senha()), null, dataAtual);
 
         Login loginSalvo = loginRepository.save(login);
 

@@ -3,6 +3,7 @@ package com.banco.xyz.financeiro.service;
 import com.banco.xyz.financeiro.dto.LoginAtualizarDTO;
 import com.banco.xyz.financeiro.dto.LoginDTO;
 import com.banco.xyz.financeiro.model.Login;
+import com.banco.xyz.financeiro.recod.DadosAutenticacao;
 import com.banco.xyz.financeiro.recod.LoginRecord;
 import com.banco.xyz.financeiro.repository.LoginRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +25,12 @@ public class LoginService {
 
     @Autowired
     private LoginRepository loginRepository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public LoginRecord getLogin(Long idLogin){
 
@@ -43,7 +54,7 @@ public class LoginService {
         Login login = new Login();
         login.setIdUsuario(loginDTO.getIdUsuario());
         login.setEmail(loginDTO.getEmail());
-        login.setSenha(loginDTO.getSenha());
+        login.setSenha(passwordEncoder.encode(loginDTO.getSenha()));
         login.setDataAutlizacao(LocalDateTime.now());
 
         loginRepository.save(login);
@@ -55,7 +66,7 @@ public class LoginService {
         Login login = loginRepository.getReferenceById(loginAtualizar.getIdLogin());
         login.setId(loginAtualizar.getIdLogin());
         login.setEmail(loginAtualizar.getEmail());
-        login.setSenha(loginAtualizar.getSenha());
+        login.setSenha(passwordEncoder.encode(loginAtualizar.getSenha()));
         login.setDataAutlizacao(LocalDateTime.now());
 
         loginRepository.save(login);
@@ -73,6 +84,14 @@ public class LoginService {
 
         loginRepository.delete(login);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuario excluido com Sucesso!");
+    }
+
+    public Authentication fazerLogin(DadosAutenticacao dadosAutenticacao){
+
+       var token = new UsernamePasswordAuthenticationToken(dadosAutenticacao.email(), dadosAutenticacao.senha());
+
+       return authenticationManager.authenticate(token);
+
     }
 
 }

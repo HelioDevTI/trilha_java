@@ -1,0 +1,28 @@
+package com.banco.xyz.financeiro.service;
+
+import com.banco.xyz.financeiro.repository.LoginRepository;
+import com.banco.xyz.financeiro.security.UsuarioAutenticacao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AutenticacaoService implements UserDetailsService {
+
+    @Autowired
+    private LoginRepository loginRepository;
+
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        return loginRepository.findByEmail(email)
+                .map(UsuarioAutenticacao::new)
+                .orElseThrow(() -> new UsernameNotFoundException("Email " + email + " não encontrado"));
+
+    }
+
+
+}
