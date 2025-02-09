@@ -1,8 +1,10 @@
 package com.banco.xyz.financeiro.infrastructure;
 
+import com.banco.xyz.financeiro.Exception.TokenInvalidoException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +34,18 @@ public class TratarErrosSpring {
         public DadosErroValidacao(FieldError erro) {
             this(erro.getField(), erro.getDefaultMessage());
         }
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> erroPermissao(){
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Acesso negado");
+    }
+
+    @ExceptionHandler(TokenInvalidoException.class)
+    public ResponseEntity<String> erroTokenInvalido(TokenInvalidoException ex){
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
 }
