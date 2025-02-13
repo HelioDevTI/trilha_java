@@ -6,7 +6,6 @@ import com.banco.xyz.financeiro.dto.ContaDTO;
 import com.banco.xyz.financeiro.recod.ContaRecord;
 import com.banco.xyz.financeiro.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -37,18 +36,21 @@ public class ContaController {
         return ResponseEntity.ok(contaService.listaConta(paginacao));
     }
 
+    @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
     @PostMapping
     public ResponseEntity<String> salvarConta(@RequestBody ContaDTO contaDTO){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(contaService.salvarConta(contaDTO));
     }
 
+    @PreAuthorize(PerfisUsuarios.GERENTE)
     @PutMapping
     public ResponseEntity<String> atualizarConta(@RequestBody ContaAtualizarDTO contaAtualizar){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(contaService.atualizarConta(contaAtualizar));
     }
 
+    @PreAuthorize(PerfisUsuarios.ADMINISTRADOR)
     @DeleteMapping("/{id}")
     public ResponseEntity<String> excluirConta(@PathVariable("id") Long id){
 

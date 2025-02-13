@@ -1,5 +1,6 @@
 package com.banco.xyz.financeiro.controller;
 
+import com.banco.xyz.financeiro.constant.PerfisUsuarios;
 import com.banco.xyz.financeiro.dto.UsuarioAtualizarDTO;
 import com.banco.xyz.financeiro.dto.UsuarioDTO;
 import com.banco.xyz.financeiro.recod.UsuarioRecord;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,6 +24,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
 
+    @PreAuthorize(PerfisUsuarios.GERENTE)
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioRecord> consultaUsuario(@PathVariable("id") Long idUsuairo){
 
@@ -30,6 +33,7 @@ public class UsuarioController {
 
     }
 
+    @PreAuthorize(PerfisUsuarios.GERENTE)
     @GetMapping()
     public ResponseEntity<Page<UsuarioRecord>> listaUsuario(@PageableDefault(page = 0, size = 10, sort = {"nome"})Pageable paginacao){
 
@@ -37,6 +41,7 @@ public class UsuarioController {
 
     }
 
+    @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
     @PostMapping()
     public ResponseEntity<String> savarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
 
@@ -44,6 +49,7 @@ public class UsuarioController {
 
     }
 
+    @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
     @PutMapping()
     public ResponseEntity<String> autualizarUsuario(@RequestBody @Valid UsuarioAtualizarDTO usuarioAtualizar){
 
@@ -51,6 +57,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.atualizarUsuario(usuarioAtualizar));
     }
 
+    @PreAuthorize(PerfisUsuarios.ADMINISTRADOR)
     @DeleteMapping("/{id}")
     public ResponseEntity<String> excluirUsuario(@PathVariable("id") Long id){
 
