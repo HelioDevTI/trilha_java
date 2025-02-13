@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.ContaAtualizarDTO;
 import com.banco.xyz.financeiro.dto.ContaDTO;
 import com.banco.xyz.financeiro.recod.ContaRecord;
 import com.banco.xyz.financeiro.service.ContaService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/conta")
+@SecurityRequirement(name = "bearerAPI")
 public class ContaController {
 
 

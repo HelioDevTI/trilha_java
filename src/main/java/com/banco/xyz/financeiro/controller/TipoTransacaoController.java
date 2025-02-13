@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.TipoTransacaoAtuliDTO;
 import com.banco.xyz.financeiro.dto.TipoTransacaoDTO;
 import com.banco.xyz.financeiro.recod.TipoTransacaoRecord;
 import com.banco.xyz.financeiro.service.TipoTransacaoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tipo/transacao")
+@SecurityRequirement(name = "bearerAPI")
 public class TipoTransacaoController {
 
 

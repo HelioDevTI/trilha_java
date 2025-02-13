@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.UsuarioAtualizarDTO;
 import com.banco.xyz.financeiro.dto.UsuarioDTO;
 import com.banco.xyz.financeiro.recod.UsuarioRecord;
 import com.banco.xyz.financeiro.service.UsuarioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/usuario")
+@SecurityRequirement(name = "bearerAPI")
 public class UsuarioController {
 
     @Autowired
