@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class CargaUsuarioTransacaoService {
+public class CargaTransacaoService {
 
     @Autowired
     private ContaRepository contaRepository;
