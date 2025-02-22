@@ -25,3 +25,8 @@ springdoc:
 
 server:
   port: 8080
+
+cambio:
+  url: http://api.exchangeratesapi.io/v1/latest?
+  chave: ${CHAVE_API}
+  simbolos: BRL,USD,JPY,ARS

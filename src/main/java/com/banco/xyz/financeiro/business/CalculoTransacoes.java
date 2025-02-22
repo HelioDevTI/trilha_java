@@ -1,10 +1,10 @@
 package com.banco.xyz.financeiro.business;
 
+import com.banco.xyz.financeiro.enumeration.SiglasMoedas;
 import com.banco.xyz.financeiro.model.Conta;
 import com.banco.xyz.financeiro.repository.ContaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
@@ -35,6 +35,12 @@ public class CalculoTransacoes {
 
 
         return true;
+    }
+
+    public BigDecimal calculoCambio(SiglasMoedas siglasMoedas){
+
+
+        return new BigDecimal(1L);
     }
 
 
