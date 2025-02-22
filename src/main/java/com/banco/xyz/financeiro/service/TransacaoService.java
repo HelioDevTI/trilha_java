@@ -1,12 +1,12 @@
 package com.banco.xyz.financeiro.service;
 
+import com.banco.xyz.financeiro.business.CalculoTransacoes;
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
 import com.banco.xyz.financeiro.model.Transacao;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.repository.TransacaoRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +23,9 @@ public class TransacaoService {
 
     @Autowired
     private TransacaoRepository transacaoRepository;
+
+    @Autowired
+    private CalculoTransacoes calculoTransacoes;
 
 
     public TransacaoRecord getTransacao(Long idConta){
@@ -41,6 +44,11 @@ public class TransacaoService {
 
     public String salvarTransacao(TransacaoDTO transacaoDTO){
 
+
+        if(!calculoTransacoes.atualizaSaldo(transacaoDTO.getIdConta(), transacaoDTO.getValor())){
+            ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Transacao não pode ser comcluida, saldo menor");
+        }
+
         Transacao transacao = new Transacao();
         transacao.setIdConta(transacaoDTO.getIdConta());
         transacao.setIdTipo(transacaoDTO.getIdTipo());
@@ -56,6 +64,12 @@ public class TransacaoService {
     public String atualizarTransacao(TransacaoAtualizarDTO transacaoDTO){
 
         Transacao transacao = transacaoRepository.getReferenceById(transacaoDTO.getId());
+
+
+        if(!calculoTransacoes.atualizaSaldo(transacao.getIdConta(), transacaoDTO.getValor().subtract(transacao.getValor()))){
+            ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Transacao não pode ser comcluida, saldo menor");
+        }
+
         transacao.setIdTipo(transacaoDTO.getIdTipo());
         transacao.setDescricao(transacaoDTO.getDescricao());
         transacao.setValor(transacaoDTO.getValor());
@@ -68,6 +82,10 @@ public class TransacaoService {
     public ResponseEntity<String> excluirTransacao(Long id){
 
         Transacao transacao = transacaoRepository.getReferenceById(id);
+
+        if(!calculoTransacoes.atualizaSaldo(transacao.getIdConta(), transacao.getValor().multiply(BigDecimal.valueOf(-1)))){
+            ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Transacao não pode ser comcluida, saldo menor");
+        }
 
         if(transacao.getId() == null){
 

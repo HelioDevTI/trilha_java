@@ -1,5 +1,6 @@
 package com.banco.xyz.financeiro.service;
 
+import com.banco.xyz.financeiro.business.CalculoTransacoes;
 import com.banco.xyz.financeiro.dto.DadosArquivoCargaTransacao;
 import com.banco.xyz.financeiro.model.Transacao;
 import com.banco.xyz.financeiro.repository.ContaRepository;
@@ -35,6 +36,9 @@ public class CargaTransacaoService {
 
     @Autowired
     private TransacaoRepository transacaoRepository;
+
+    @Autowired
+    private CalculoTransacoes calculoTransacoes;
 
 
     public String processarTrasacoes(MultipartFile arquivo){
@@ -101,15 +105,18 @@ public class CargaTransacaoService {
             Long idTipo = tipoTransacaoRepository.idTipoMoedaDescricao(dadosTransacao.getMoeda(),
                     dadosTransacao.getTipoTransacao());
 
-            Transacao transacao = new Transacao();
-            transacao.setIdConta(idConta);
-            transacao.setIdTipo(idTipo);
-            transacao.setDescricao(dadosTransacao.getDescricao());
-            transacao.setValor(dadosTransacao.getValor());
-            transacao.setDataTransacao(dadosTransacao.getData().atTime(dadosTransacao.getHora()));
+            if(calculoTransacoes.atualizaSaldo(idConta, dadosTransacao.getValor())) {
 
-            transacaoRepository.save(transacao);
-            quantTrasaProce.getAndIncrement();
+                Transacao transacao = new Transacao();
+                transacao.setIdConta(idConta);
+                transacao.setIdTipo(idTipo);
+                transacao.setDescricao(dadosTransacao.getDescricao());
+                transacao.setValor(dadosTransacao.getValor());
+                transacao.setDataTransacao(dadosTransacao.getData().atTime(dadosTransacao.getHora()));
+
+                transacaoRepository.save(transacao);
+                quantTrasaProce.getAndIncrement();
+            }
         });
 
         return "Aquivo com " + quantTransaArq + " trasações e foram cadastradas " + quantTrasaProce.get();
