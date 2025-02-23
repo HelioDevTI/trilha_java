@@ -122,3 +122,15 @@ values(6, 'R$', 'Saque', 1, 'DEBITO', CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
 values(7, 'R$', 'Pagamento Aplicativo', 1, 'DEBITO', CURRENT_TIMESTAMP());
+
+INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
+values(8, 'US$', 'Compra Cartão Credito Dolar', 1, 'DEBITO', CURRENT_TIMESTAMP());
+
+INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
+values(9, '€', 'Compra Cartão Credito Euro', 1, 'DEBITO', CURRENT_TIMESTAMP());
+
+INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
+values(10, '¥', 'Compra Cartão Credito Iene', 1, 'DEBITO', CURRENT_TIMESTAMP());
+
+INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
+values(11, '$', 'Compra Cartão Credito Peso Argentino', 1, 'DEBITO', CURRENT_TIMESTAMP());
