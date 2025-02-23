@@ -112,6 +112,7 @@ public class CargaTransacaoService {
                 transacao.setIdTipo(idTipo);
                 transacao.setDescricao(dadosTransacao.getDescricao());
                 transacao.setValor(dadosTransacao.getValor());
+                transacao.setValorConvertido(calculoTransacoes.coversaoTransacao(dadosTransacao.getValor(), idTipo));
                 transacao.setDataTransacao(dadosTransacao.getData().atTime(dadosTransacao.getHora()));
 
                 transacaoRepository.save(transacao);

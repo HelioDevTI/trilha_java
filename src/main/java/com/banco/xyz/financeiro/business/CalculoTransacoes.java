@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.api.dto.ApiCambioDTO;
 import com.banco.xyz.financeiro.enumeration.SiglasMoedas;
 import com.banco.xyz.financeiro.model.Conta;
 import com.banco.xyz.financeiro.repository.ContaRepository;
+import com.banco.xyz.financeiro.repository.TipoTransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,10 @@ public class CalculoTransacoes {
 
     @Autowired
     private ApiExternaCambio apiExternaCambio;
+
+
+    @Autowired
+    private TipoTransacaoRepository tipoTransacaoRepository;
 
 
     public Boolean atualizaSaldo(Long idConta, BigDecimal valorTransacao){
@@ -64,6 +69,22 @@ public class CalculoTransacoes {
         };
 
 
+    }
+
+    public BigDecimal coversaoTransacao(BigDecimal valor, Long idTipoTransacao){
+
+        String moeda = tipoTransacaoRepository.getReferenceById(idTipoTransacao).getMoeda();
+
+        SiglasMoedas siglasMoedas = switch (moeda){
+            case "R$" -> SiglasMoedas.REAL;
+            case "US$" -> SiglasMoedas.DOLAR;
+            case "€" -> SiglasMoedas.EURO;
+            case "¥" -> SiglasMoedas.IENE;
+            case "$" -> SiglasMoedas.PESO_ARGENTINO;
+            default -> throw new IllegalStateException("Moeda não encontrada: " + moeda);
+        };
+
+        return calculoCambio(siglasMoedas, valor);
     }
 
 

@@ -3,6 +3,7 @@ package com.banco.xyz.financeiro.service;
 import com.banco.xyz.financeiro.business.CalculoTransacoes;
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
+import com.banco.xyz.financeiro.enumeration.SiglasMoedas;
 import com.banco.xyz.financeiro.model.Transacao;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.repository.TransacaoRepository;
@@ -55,7 +56,7 @@ public class TransacaoService {
         transacao.setDescricao(transacaoDTO.getDescricao());
         transacao.setValor(transacaoDTO.getValor());
         transacao.setDataTransacao(LocalDateTime.now());
-        transacao.setValorConvertido(BigDecimal.ZERO);// TODO altera para API Externa
+        transacao.setValorConvertido(calculoTransacoes.coversaoTransacao(transacaoDTO.getValor(), transacaoDTO.getIdTipo()));
         transacaoRepository.save(transacao);
 
         return "Salvo com Sucesso!";
@@ -73,7 +74,7 @@ public class TransacaoService {
         transacao.setIdTipo(transacaoDTO.getIdTipo());
         transacao.setDescricao(transacaoDTO.getDescricao());
         transacao.setValor(transacaoDTO.getValor());
-        transacao.setValorConvertido(BigDecimal.ZERO);// TODO altera para API Externa
+        transacao.setValorConvertido(calculoTransacoes.coversaoTransacao(transacaoDTO.getValor(), transacaoDTO.getIdTipo()));
         transacaoRepository.save(transacao);
 
         return "Atualizado com Sucesso!";

@@ -21,4 +21,6 @@ public enum SiglasMoedas {
         this.moeda = moeda;
         this.descricaoMoeda = descricaoMoeda;
     }
+
+
 }
