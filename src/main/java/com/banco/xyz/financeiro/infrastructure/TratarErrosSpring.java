@@ -48,4 +48,10 @@ public class TratarErrosSpring {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> erroSistema(RuntimeException runEx){
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(runEx.getMessage());
+    }
+
 }

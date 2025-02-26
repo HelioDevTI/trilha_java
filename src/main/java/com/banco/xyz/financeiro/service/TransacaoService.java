@@ -3,11 +3,12 @@ package com.banco.xyz.financeiro.service;
 import com.banco.xyz.financeiro.business.CalculoTransacoes;
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
-import com.banco.xyz.financeiro.enumeration.SiglasMoedas;
 import com.banco.xyz.financeiro.model.Transacao;
+import com.banco.xyz.financeiro.proxy.DadosTrasacaoProxy;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.repository.TransacaoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Slf4j
 @Service
 public class TransacaoService {
 
@@ -40,6 +44,25 @@ public class TransacaoService {
 
         return transacaoRepository.findAll(paginacao).map(tra -> new TransacaoRecord(tra.getIdTipo(), tra.getIdConta(),
                 tra.getDescricao(), tra.getValor(), tra.getValorConvertido(),  tra.getDataTransacao()));
+    }
+
+    public List<DadosTrasacaoProxy> consultaTransacao(Long idConta, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
+                                                      String descCompra){
+
+        if((dataInicio == null && dataFim != null) || (dataInicio != null && dataFim == null)){
+
+            throw new RuntimeException("Informa a data de incio e fim");
+
+        }
+
+        if(dataInicio != null && dataInicio.isBefore(dataFim)){
+
+            throw new RuntimeException("A data de incio não pode ser menor que a data fim");
+
+        }
+
+     return transacaoRepository.consultaTransacao(idConta, dataInicio, dataFim, tipoTransacao, descCompra);
+
     }
 
 
