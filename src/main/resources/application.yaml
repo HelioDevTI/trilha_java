@@ -30,3 +30,7 @@ cambio:
   url: http://api.exchangeratesapi.io/v1/latest?
   chave: ${CHAVE_API}
   simbolos: BRL,USD,JPY,ARS
+
+mock:
+  cambio:
+    url: https://${MOCK_API}.mockapi.io/api/v1/valores/1

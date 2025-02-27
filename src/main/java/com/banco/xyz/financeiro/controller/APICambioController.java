@@ -1,8 +1,10 @@
 package com.banco.xyz.financeiro.controller;
 
 import com.banco.xyz.financeiro.api.cambio.ApiExternaCambio;
+import com.banco.xyz.financeiro.api.cambio.ApiMockCambio;
 import com.banco.xyz.financeiro.api.dto.ApiCambioDTO;
 import com.banco.xyz.financeiro.business.CalculoTransacoes;
+import com.banco.xyz.financeiro.business.CalculoTransacoesMock;
 import com.banco.xyz.financeiro.constant.PerfisUsuarios;
 import com.banco.xyz.financeiro.enumeration.SiglasMoedas;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,6 +30,12 @@ public class APICambioController {
     @Autowired
     private CalculoTransacoes calculoTransacoes;
 
+    @Autowired
+    private ApiMockCambio apiMockCambio;
+
+    @Autowired
+    private CalculoTransacoesMock calculoTransacoesMock;
+
 
     @GetMapping("/externa")
     public ResponseEntity<ApiCambioDTO> consultaApi(){
@@ -40,5 +48,19 @@ public class APICambioController {
                                                        @PathVariable("moeda") SiglasMoedas moeda){
 
         return ResponseEntity.ok().body(calculoTransacoes.calculoCambio(moeda, valor));
+    }
+
+    @GetMapping("/mock")
+    public ResponseEntity<ApiCambioDTO> consultaApiMock(){
+
+        return ResponseEntity.ok().body(apiMockCambio.chamarAPIMockCambios());
+    }
+
+
+    @GetMapping("/externa/mock/valor/{valor}/moeda/{moeda}")
+    public ResponseEntity<BigDecimal> consultaApiMockValor(@PathVariable("valor") BigDecimal valor,
+                                                           @PathVariable("moeda") SiglasMoedas moeda){
+
+        return ResponseEntity.ok().body(calculoTransacoesMock.calculoCambioMock(moeda, valor));
     }
 }
