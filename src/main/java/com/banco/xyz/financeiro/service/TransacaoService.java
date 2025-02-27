@@ -35,14 +35,14 @@ public class TransacaoService {
 
     public TransacaoRecord getTransacao(Long idConta){
 
-        return transacaoRepository.findById(idConta).map(tra -> new TransacaoRecord(tra.getIdTipo(), tra.getIdConta(),
+        return transacaoRepository.findById(idConta).map(tra -> new TransacaoRecord(tra.getId(), tra.getIdTipo(), tra.getIdConta(),
                         tra.getDescricao(), tra.getValor(), tra.getValorConvertido(), tra.getDataTransacao()))
                 .orElseThrow(EntityNotFoundException::new);
     }
 
     public Page<TransacaoRecord> listaTransacao(Pageable paginacao){
 
-        return transacaoRepository.findAll(paginacao).map(tra -> new TransacaoRecord(tra.getIdTipo(), tra.getIdConta(),
+        return transacaoRepository.findAll(paginacao).map(tra -> new TransacaoRecord(tra.getId(), tra.getIdTipo(), tra.getIdConta(),
                 tra.getDescricao(), tra.getValor(), tra.getValorConvertido(),  tra.getDataTransacao()));
     }
 

@@ -31,7 +31,7 @@ public class TransacaoController {
 
     @PreAuthorize(PerfisUsuarios.GERENTE)
     @GetMapping("/{id}")
-    public ResponseEntity<TransacaoRecord> consultatransacao(@PathVariable("id") Long id){
+    public ResponseEntity<TransacaoRecord> consultaTransacao(@PathVariable("id") Long id){
 
         return ResponseEntity.ok(transacaoService.getTransacao(id));
     }
@@ -57,21 +57,21 @@ public class TransacaoController {
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA)
     @PostMapping
-    public ResponseEntity<String> salvartransacao(@RequestBody TransacaoDTO transacaoDTO){
+    public ResponseEntity<String> salvarTransacao(@RequestBody TransacaoDTO transacaoDTO){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.salvarTransacao(transacaoDTO));
     }
 
     @PreAuthorize(PerfisUsuarios.GERENTE)
     @PutMapping
-    public ResponseEntity<String> atualizartransacao(@RequestBody TransacaoAtualizarDTO transacaoDTO){
+    public ResponseEntity<String> atualizarTransacao(@RequestBody TransacaoAtualizarDTO transacaoDTO){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.atualizarTransacao(transacaoDTO));
     }
 
     @PreAuthorize(PerfisUsuarios.GERENTE)
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> excluirtransacao(@PathVariable("id") Long id){
+    public ResponseEntity<String> excluirTransacao(@PathVariable("id") Long id){
 
         return transacaoService.excluirTransacao(id);
     }
