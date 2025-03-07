@@ -55,7 +55,7 @@ public class TransacaoService {
 
         }
 
-        if(dataInicio != null && dataInicio.isBefore(dataFim)){
+        if(dataInicio != null && dataFim.isBefore(dataInicio)){
 
             throw new RuntimeException("A data de incio não pode ser menor que a data fim");
 
