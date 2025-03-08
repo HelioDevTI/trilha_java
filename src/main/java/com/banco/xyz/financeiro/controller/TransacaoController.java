@@ -3,7 +3,7 @@ package com.banco.xyz.financeiro.controller;
 import com.banco.xyz.financeiro.constant.PerfisUsuarios;
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
-import com.banco.xyz.financeiro.proxy.DadosTrasacaoProxy;
+import com.banco.xyz.financeiro.proxy.DadosTransacaoProxy;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.service.TransacaoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,7 +45,7 @@ public class TransacaoController {
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA)
     @GetMapping("/consulta")
-    public ResponseEntity<List<DadosTrasacaoProxy>> consultaTransacao(
+    public ResponseEntity<List<DadosTransacaoProxy>> consultaTransacao(
            @RequestParam("IdConta") Long idConta,
            @RequestParam(name = "dataIncio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd/MM/yyyy") LocalDate dataInicio,
            @RequestParam(name = "dataFim", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd/MM/yyyy") LocalDate dataFim,

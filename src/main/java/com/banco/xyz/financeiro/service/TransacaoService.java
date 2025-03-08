@@ -4,7 +4,7 @@ import com.banco.xyz.financeiro.business.CalculoTransacoes;
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
 import com.banco.xyz.financeiro.model.Transacao;
-import com.banco.xyz.financeiro.proxy.DadosTrasacaoProxy;
+import com.banco.xyz.financeiro.proxy.DadosTransacaoProxy;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.repository.TransacaoRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -46,8 +46,8 @@ public class TransacaoService {
                 tra.getDescricao(), tra.getValor(), tra.getValorConvertido(),  tra.getDataTransacao()));
     }
 
-    public List<DadosTrasacaoProxy> consultaTransacao(Long idConta, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
-                                                      String descCompra){
+    public List<DadosTransacaoProxy> consultaTransacao(Long idConta, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
+                                                       String descCompra){
 
         if((dataInicio == null && dataFim != null) || (dataInicio != null && dataFim == null)){
 

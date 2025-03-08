@@ -1,7 +1,8 @@
 package com.banco.xyz.financeiro.repository;
 
 import com.banco.xyz.financeiro.model.Transacao;
-import com.banco.xyz.financeiro.proxy.DadosTrasacaoProxy;
+import com.banco.xyz.financeiro.proxy.DadosRelatorioTransacaoProxy;
+import com.banco.xyz.financeiro.proxy.DadosTransacaoProxy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,6 +33,20 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
             AND ( :descCompra IS NULL OR tr.descricao LIKE %:descCompra%)
             ORDER BY tr.dataTransacao
             """)
-    List<DadosTrasacaoProxy> consultaTransacao(Long idConta, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
-                                               String descCompra);
+    List<DadosTransacaoProxy> consultaTransacao(Long idConta, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
+                                                String descCompra);
+
+    @Query("""
+            SELECT tr.dataTransacao AS data,
+                   ti.descricao AS tipoTransacao,
+                   ti.tipo AS tipoCobranca,
+                   tr.descricao AS descricao,
+                   CONCAT(ti.moeda, tr.valor) AS valorCompra,
+                   CONCAT('R$', tr.valor) AS valorReais
+            FROM Transacao tr,
+                 TipoTransacao ti
+            WHERE tr.idConta = idConta
+            AND ti.id = tr.idTipo
+            """)
+    List<DadosRelatorioTransacaoProxy> consultaTransacaoConta(Long idConta);
 }
