@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: create-drop
+
+cambio:
+  url: http://teste.com.br
+  chave: 1234567
+  simbolos: BRL,USD,JPY,ARS
+
+api:
+  security:
+    token:
+      secret: 11111
+
+mock:
+  cambio:
+    url: https://teste.mockapi.com.br
+
+
+
+
+
+
+
