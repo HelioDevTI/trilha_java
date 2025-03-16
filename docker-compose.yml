@@ -1,9 +1,31 @@
 services:
+
+  servicoAplicacao: # Nome do serviço
+    image: trilha_java-servicoaplicacao
+    ports:
+      - "8081:8080" #Mudar a porta do host para 8081
+    depends_on:
+      - servicoBanco
+    environment: # Variaveis de ambiente
+      SPRING_PROFILES_ACTIVE: prod
+      CHAVE_API: agaraadnvcnnbjvnjvcbv
+      JWT_SECRET: abcd1234
+      MOCK_API: hhdiririirjvjopçç
+      URL_BANCO: servicoBanco
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/localtime:/etc/localtime:ro # Ajustando para o horario do host
+      - /etc/timezone:/etc/timezone:ro   # Ajustando para o horario do host
+
+
+
   servicoBanco:  # Nome do serviço
     image: mysql:latest  # Imagem do Docker a ser utilizada
     container_name: containerMysql  # Nome do container
     restart: always  # Reinicia o container automaticamente se ele parar
-    environment:
+    environment: #Variaveis de ambiente
       MYSQL_DATABASE: financeiro  # Nome do banco de dados
       MYSQL_ROOT_PASSWORD: 12345  # Senha do usuário root
       MYSQL_USER: userDB  # Nome do usuário
