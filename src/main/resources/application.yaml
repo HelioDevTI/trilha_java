@@ -3,7 +3,7 @@ spring:
     name: financeiro
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/financeiro
+    url: jdbc:mysql://${URL_BANCO}:3306/financeiro
     username: userDB
     password: 12345
   jpa:
@@ -16,7 +16,7 @@ spring:
 api:
   security:
     token:
-      secret: ${JWT_SECRET:1111111}
+      secret: ${JWT_SECRET}
 
 
 springdoc:
