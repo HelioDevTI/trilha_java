@@ -6,14 +6,18 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.banco.xyz.financeiro.Exception.TokenInvalidoException;
 import com.banco.xyz.financeiro.security.UsuarioAutenticacao;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
+@Slf4j
 @Service
 public class TokenService {
 
@@ -25,6 +29,9 @@ public class TokenService {
     public String gerarToken(UsuarioAutenticacao usuario){
 
         var algoritimo = Algorithm.HMAC256(secret);
+
+        log.info("Data Criacao Token = {}", dataCiracao());
+        log.info("Data Expiracao Token = {}", dataExpiracao());
 
         try{
             return JWT.create()
@@ -43,17 +50,19 @@ public class TokenService {
     }
 
     private Instant dataCiracao() {
-        return LocalDateTime.now().toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now();
     }
 
 
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plus(3, ChronoUnit.HOURS);
     }
 
     public String getUserToken(String token){
 
         var aloritimo = Algorithm.HMAC256(secret);
+
+        log.info("Sergredo = {}", secret);
 
         try {
             return JWT.require(aloritimo)
@@ -63,6 +72,7 @@ public class TokenService {
                     .getSubject();
         }catch (JWTVerificationException e){
 
+            log.error("Erro no JWT msg = [{}] e trace = [{}]", e.getMessage(), e.getStackTrace());
             throw new TokenInvalidoException("Token JWT inválido ou expirado");
         }
 
