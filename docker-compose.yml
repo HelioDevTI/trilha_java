@@ -8,9 +8,9 @@ services:
       - servicoBanco
     environment: # Variaveis de ambiente
       SPRING_PROFILES_ACTIVE: prod
-      CHAVE_API: agaraadnvcnnbjvnjvcbv
+      CHAVE_API: adicionarChaveApi
       JWT_SECRET: abcd1234
-      MOCK_API: hhdiririirjvjopçç
+      MOCK_API: adicionaMockApi
       URL_BANCO: servicoBanco
     build:
       context: .
