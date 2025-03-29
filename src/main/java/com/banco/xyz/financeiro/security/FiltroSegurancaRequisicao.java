@@ -11,6 +11,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class FiltroSegurancaRequisicao extends OncePerRequestFilter {
 
@@ -40,6 +42,9 @@ public class FiltroSegurancaRequisicao extends OncePerRequestFilter {
 
         String token = obterToken(request);
 
+       log.info("Token obtido: " + token);
+
+
         if(token != null){
 
             String usuario = tokenService.getUserToken(token);
@@ -58,6 +63,7 @@ public class FiltroSegurancaRequisicao extends OncePerRequestFilter {
             var autenticacao = new UsernamePasswordAuthenticationToken(usuarioAutenticacao, null, usuarioAutenticacao.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(autenticacao);
 
+            log.info("Autenticação configurada para o usuario: " + usuario);
         }
 
         filterChain.doFilter(request, response);

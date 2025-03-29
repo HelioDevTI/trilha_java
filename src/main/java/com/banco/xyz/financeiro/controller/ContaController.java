@@ -59,4 +59,10 @@ public class ContaController {
         return contaService.excluirConta(id);
     }
 
+    @PostMapping("/teste")
+    public ResponseEntity<String> testePost(@RequestBody String corpo) {
+        System.out.println("Corpo recebido: " + corpo);
+        return ResponseEntity.ok("OK");
+    }
+
 }
