@@ -1,26 +1,27 @@
 package com.banco.xyz.financeiro.controller;
 
-import com.banco.xyz.financeiro.constant.PerfisUsuarios;
+import com.banco.xyz.financeiro.dto.ContaAtualizarDTO;
 import com.banco.xyz.financeiro.dto.ContaDTO;
+import com.banco.xyz.financeiro.factory.ContaAtualizarDTOFactory;
 import com.banco.xyz.financeiro.factory.ContaDTOFactory;
+import com.banco.xyz.financeiro.factory.TokenFactory;
+import com.banco.xyz.financeiro.model.Login;
+import com.banco.xyz.financeiro.model.Perfil;
+import com.banco.xyz.financeiro.model.Usuario;
 import com.banco.xyz.financeiro.recod.ContaRecord;
-import com.banco.xyz.financeiro.repository.LoginRepository;
-import com.banco.xyz.financeiro.repository.PerfilRepository;
-import com.banco.xyz.financeiro.repository.UsuarioRepository;
 import com.banco.xyz.financeiro.service.ContaService;
-import com.banco.xyz.financeiro.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,27 +33,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@WebMvcTest(ContaController.class)
-//@SpringBootTest
+@SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-//@Import(SecurityConfig.class)
 public class ContaControllerTest {
 
     @MockitoBean
     private ContaService contaService;
-
-    @MockitoBean
-    private TokenService tokenService;
-
-    @MockitoBean
-    private LoginRepository loginRepository;
-
-    @MockitoBean
-    private PerfilRepository perfilRepository;
-
-    @MockitoBean
-    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,10 +47,27 @@ public class ContaControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenFactory tokenFactory;
+
+
+
     private static final String URL = "/conta";
 
+    private static String tokenCorren;
+    private static String tokenGeren;
+    private static String tokenAdmin;
+
+    @BeforeAll
+    static void setUpAll(
+            @Autowired TokenFactory tokenFactory
+    ) {
+        tokenCorren = tokenFactory.getTokenCorrentista();
+        tokenGeren = tokenFactory.getTokenGerente();
+        tokenAdmin = tokenFactory.getTokenAdministrador();
+    }
+
     @Test
-    @WithMockUser(username = "admin", roles = {PerfisUsuarios.CORRENTISTA_GERENTE})
     void consultaContaTest() throws Exception {
 
         ContaRecord contaRequest = new ContaRecord(1L, 1L, 1L, 1L, 1L,
@@ -72,7 +76,8 @@ public class ContaControllerTest {
         Mockito.when(contaService.getConta(1L)).thenReturn(contaRequest);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/1"))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + tokenCorren))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -86,8 +91,7 @@ public class ContaControllerTest {
 
     }
 
-  /*  @Test
-    //@WithMockUser(username = "admin", roles = {PerfisUsuarios.CORRENTISTA_GERENTE})
+    @Test
     void salvarContaTest() throws Exception {
 
         String mensagemRetorno = "Conta criada com sucesso";
@@ -101,9 +105,9 @@ public class ContaControllerTest {
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(jsonRequest))
+                        .content(jsonRequest)
+                .header("Authorization", "Bearer " + tokenCorren))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andDo(MockMvcResultHandlers.print())
                 .andReturn();
 
         String stringJson = json.getResponse().getContentAsString();
@@ -113,12 +117,49 @@ public class ContaControllerTest {
     }
 
     @Test
-    public void testePostTest() throws Exception {
-        String corpo = "teste";
-        mockMvc.perform(MockMvcRequestBuilders.post(URL.concat("/teste"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("\"" + corpo + "\"")
-                        .with(SecurityMockMvcRequestPostProcessors.jwt()))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }*/
+    void atualizarContaTest() throws Exception {
+
+        String mensagemRetorno = "Conta atualizada com sucesso";
+
+        ContaAtualizarDTO contaAtualizarDTO = ContaAtualizarDTOFactory.getContaAtualizarDTO();
+
+        String jsonRequest = objectMapper.writeValueAsString(contaAtualizarDTO);
+
+
+        Mockito.when(contaService.atualizarConta(contaAtualizarDTO)).thenReturn(mensagemRetorno);
+
+        MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(jsonRequest)
+                        .header("Authorization", "Bearer " + tokenGeren))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String stringJson = json.getResponse().getContentAsString();
+
+        Assertions.assertEquals(mensagemRetorno, stringJson);
+
+    }
+
+    @Test
+    void excluirContaTest() throws Exception {
+
+        String mensagemRetorno = "Conta atualizada com sucesso";
+
+
+        Mockito.when(contaService.excluirConta(1L)).thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagemRetorno));
+
+        MvcResult json = mockMvc.perform(MockMvcRequestBuilders.delete(URL.concat("/1"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andReturn();
+
+        String stringJson = json.getResponse().getContentAsString();
+
+        Assertions.assertEquals(mensagemRetorno, stringJson);
+
+    }
+
+
 }

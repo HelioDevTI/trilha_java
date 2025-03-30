@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/conta")
-@SecurityRequirement(name = "bearerAPI")
 public class ContaController {
 
 
@@ -49,7 +48,7 @@ public class ContaController {
     @PutMapping
     public ResponseEntity<String> atualizarConta(@RequestBody ContaAtualizarDTO contaAtualizar){
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(contaService.atualizarConta(contaAtualizar));
+        return ResponseEntity.status(HttpStatus.OK).body(contaService.atualizarConta(contaAtualizar));
     }
 
     @PreAuthorize(PerfisUsuarios.ADMINISTRADOR)
@@ -57,12 +56,6 @@ public class ContaController {
     public ResponseEntity<String> excluirConta(@PathVariable("id") Long id){
 
         return contaService.excluirConta(id);
-    }
-
-    @PostMapping("/teste")
-    public ResponseEntity<String> testePost(@RequestBody String corpo) {
-        System.out.println("Corpo recebido: " + corpo);
-        return ResponseEntity.ok("OK");
     }
 
 }
