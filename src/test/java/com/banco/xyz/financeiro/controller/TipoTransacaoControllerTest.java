@@ -1,12 +1,11 @@
 package com.banco.xyz.financeiro.controller;
 
-import com.banco.xyz.financeiro.dto.ContaAtualizarDTO;
-import com.banco.xyz.financeiro.dto.ContaDTO;
-import com.banco.xyz.financeiro.factory.ContaAtualizarDTOFactory;
-import com.banco.xyz.financeiro.factory.ContaDTOFactory;
+import com.banco.xyz.financeiro.dto.TipoTransacaoAtuliDTO;
+import com.banco.xyz.financeiro.dto.TipoTransacaoDTO;
+import com.banco.xyz.financeiro.enumeration.Tipo;
 import com.banco.xyz.financeiro.factory.TokenFactory;
-import com.banco.xyz.financeiro.recod.ContaRecord;
-import com.banco.xyz.financeiro.service.ContaService;
+import com.banco.xyz.financeiro.recod.TipoTransacaoRecord;
+import com.banco.xyz.financeiro.service.TipoTransacaoService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -31,17 +30,16 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class ContaControllerTest {
+public class TipoTransacaoControllerTest {
 
     @MockitoBean
-    private ContaService contaService;
+    private TipoTransacaoService tipoTransacaoService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,33 +51,30 @@ public class ContaControllerTest {
     private TokenFactory tokenFactory;
 
 
+    private static final String URL = "/tipo/transacao";
 
-    private static final String URL = "/conta";
 
-    private static String tokenCorren;
-    private static String tokenGeren;
     private static String tokenAdmin;
 
     @BeforeAll
     static void setUpAll(
             @Autowired TokenFactory tokenFactory
     ) {
-        tokenCorren = tokenFactory.getTokenCorrentista();
-        tokenGeren = tokenFactory.getTokenGerente();
         tokenAdmin = tokenFactory.getTokenAdministrador();
     }
 
+
     @Test
-    void consultaContaTest() throws Exception {
+    void consultaTipoTransacaoTest() throws Exception {
 
-        ContaRecord contaRequest = new ContaRecord(1L, 1L, 1L, 1L, 1L,
-                new BigDecimal("300.55"), LocalDateTime.now());
+        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord("$$$", "Dinheiro", true,
+                Tipo.DEBITO, LocalDateTime.now());
 
-        Mockito.when(contaService.getConta(1L)).thenReturn(contaRequest);
+        Mockito.when(tipoTransacaoService.getTipoTransacao(1L)).thenReturn(tipoTransacaoRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/1"))
                         .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + tokenCorren))
+                        .header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -87,33 +82,33 @@ public class ContaControllerTest {
         String stringJson = json.getResponse().getContentAsString();
 
 
-        ContaRecord contaResponse = objectMapper.readValue(stringJson, ContaRecord.class);
+        TipoTransacaoRecord tipoTransacaoRecordResponse = objectMapper.readValue(stringJson, TipoTransacaoRecord.class);
 
-        Assertions.assertEquals(contaResponse.numero(), contaRequest.numero());
+        Assertions.assertEquals(tipoTransacaoRecord.tipo(), tipoTransacaoRecordResponse.tipo());
 
     }
 
 
     @Test
-    void listaContaTest() throws Exception {
+    void listaTipoTransacaoTest() throws Exception {
 
-        ContaRecord contaRequest = new ContaRecord(1L, 1L, 1L, 1L, 1L,
-                new BigDecimal("300.55"), LocalDateTime.now());
+        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord("$$$", "Dinheiro", true,
+                Tipo.DEBITO, LocalDateTime.now());
 
-        ContaRecord contaRequest2 = new ContaRecord(2L, 2L, 2L, 2L, 2L,
-                new BigDecimal("600.66"), LocalDateTime.now());
+        TipoTransacaoRecord tipoTransacaoRecord2 = new TipoTransacaoRecord("RRR", "Dinheiro REX", true,
+                Tipo.CREDITO, LocalDateTime.now());
 
-        List<ContaRecord> listaConta = List.of(contaRequest, contaRequest2);
+        List<TipoTransacaoRecord> listaTipoTransa = List.of(tipoTransacaoRecord, tipoTransacaoRecord2);
 
 
         Pageable pageable = PageRequest.of(0, 2);
-        Page<ContaRecord> page = new PageImpl<>(listaConta, pageable, listaConta.size());
+        Page<TipoTransacaoRecord> page = new PageImpl<>(listaTipoTransa, pageable, listaTipoTransa.size());
 
-        Mockito.when(contaService.listaConta(Mockito.any())).thenReturn(page);
+        Mockito.when(tipoTransacaoService.listaTipoTransacao(Mockito.any())).thenReturn(page);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("?page=0&size=1"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + tokenGeren))
+                        .header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -129,21 +124,25 @@ public class ContaControllerTest {
     }
 
     @Test
-    void salvarContaTest() throws Exception {
+    void salvarTipoTransacaoTest() throws Exception {
 
-        String mensagemRetorno = "Conta criada com sucesso";
+        String mensagemRetorno = "Tipo Transacap criada com sucesso";
 
-        ContaDTO contaDTO = ContaDTOFactory.getContaDTO();
+        TipoTransacaoDTO tipoTransacaoDTO = new TipoTransacaoDTO();
+        tipoTransacaoDTO.setTipo(Tipo.DEBITO);
+        tipoTransacaoDTO.setDescricao("Nova Dinheiro");
+        tipoTransacaoDTO.setMoeda("$$$");
+        tipoTransacaoDTO.setAtivo(true);
 
-        String jsonRequest = objectMapper.writeValueAsString(contaDTO);
+        String jsonRequest = objectMapper.writeValueAsString(tipoTransacaoDTO);
 
 
-        Mockito.when(contaService.salvarConta(contaDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(tipoTransacaoService.salvarTipoTransacao(tipoTransacaoDTO)).thenReturn(mensagemRetorno);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(jsonRequest)
-                .header("Authorization", "Bearer " + tokenCorren))
+                        .header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
@@ -154,22 +153,27 @@ public class ContaControllerTest {
     }
 
     @Test
-    void atualizarContaTest() throws Exception {
+    void atualizarTipoTransacaoTest() throws Exception {
 
-        String mensagemRetorno = "Conta atualizada com sucesso";
+        String mensagemRetorno = "Tipo Transacao atualizada com sucesso";
 
-        ContaAtualizarDTO contaAtualizarDTO = ContaAtualizarDTOFactory.getContaAtualizarDTO();
+        TipoTransacaoAtuliDTO tipoTransacaoAtuliDTO = new TipoTransacaoAtuliDTO();
+        tipoTransacaoAtuliDTO.setTipo(Tipo.DEBITO);
+        tipoTransacaoAtuliDTO.setDescricao("Nova Dinheiro");
+        tipoTransacaoAtuliDTO.setMoeda("$$$");
+        tipoTransacaoAtuliDTO.setAtivo(true);
+        tipoTransacaoAtuliDTO.setId(1L);
 
-        String jsonRequest = objectMapper.writeValueAsString(contaAtualizarDTO);
+        String jsonRequest = objectMapper.writeValueAsString(tipoTransacaoAtuliDTO);
 
 
-        Mockito.when(contaService.atualizarConta(contaAtualizarDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(tipoTransacaoService.atualizarTipoTransacao(tipoTransacaoAtuliDTO)).thenReturn(mensagemRetorno);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(jsonRequest)
-                        .header("Authorization", "Bearer " + tokenGeren))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                        .header("Authorization", "Bearer " + tokenAdmin))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
         String stringJson = json.getResponse().getContentAsString();
@@ -181,10 +185,11 @@ public class ContaControllerTest {
     @Test
     void excluirContaTest() throws Exception {
 
-        String mensagemRetorno = "Conta excluida com sucesso";
+        String mensagemRetorno = "Tipo Transacao excluida com sucesso";
 
 
-        Mockito.when(contaService.excluirConta(1L)).thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagemRetorno));
+        Mockito.when(tipoTransacaoService.excluirTipoTransacao(1L))
+                .thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagemRetorno));
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.delete(URL.concat("/1"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -197,6 +202,4 @@ public class ContaControllerTest {
         Assertions.assertEquals(mensagemRetorno, stringJson);
 
     }
-
-
 }

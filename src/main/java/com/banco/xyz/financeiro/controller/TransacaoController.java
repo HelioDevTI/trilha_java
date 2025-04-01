@@ -66,7 +66,7 @@ public class TransacaoController {
     @PutMapping
     public ResponseEntity<String> atualizarTransacao(@RequestBody TransacaoAtualizarDTO transacaoDTO){
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.atualizarTransacao(transacaoDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(transacaoService.atualizarTransacao(transacaoDTO));
     }
 
     @PreAuthorize(PerfisUsuarios.GERENTE)

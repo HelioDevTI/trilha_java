@@ -1,12 +1,11 @@
 package com.banco.xyz.financeiro.controller;
 
-import com.banco.xyz.financeiro.dto.ContaAtualizarDTO;
-import com.banco.xyz.financeiro.dto.ContaDTO;
-import com.banco.xyz.financeiro.factory.ContaAtualizarDTOFactory;
-import com.banco.xyz.financeiro.factory.ContaDTOFactory;
+import com.banco.xyz.financeiro.dto.LoginAtualizarDTO;
+import com.banco.xyz.financeiro.dto.LoginDTO;
+import com.banco.xyz.financeiro.factory.LoginDTOFactory;
 import com.banco.xyz.financeiro.factory.TokenFactory;
-import com.banco.xyz.financeiro.recod.ContaRecord;
-import com.banco.xyz.financeiro.service.ContaService;
+import com.banco.xyz.financeiro.recod.LoginRecord;
+import com.banco.xyz.financeiro.service.LoginService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -31,17 +30,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class ContaControllerTest {
-
-    @MockitoBean
-    private ContaService contaService;
+public class LoginControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,9 +47,10 @@ public class ContaControllerTest {
     @Autowired
     private TokenFactory tokenFactory;
 
+    @MockitoBean
+    private LoginService loginService;
 
-
-    private static final String URL = "/conta";
+    private static final String URL = "/login";
 
     private static String tokenCorren;
     private static String tokenGeren;
@@ -70,16 +66,16 @@ public class ContaControllerTest {
     }
 
     @Test
-    void consultaContaTest() throws Exception {
+    void getLoginTest() throws Exception {
 
-        ContaRecord contaRequest = new ContaRecord(1L, 1L, 1L, 1L, 1L,
-                new BigDecimal("300.55"), LocalDateTime.now());
+        LoginRecord loginRequest = new LoginRecord(1L, 1L, "teste@teste.com", "1234",
+                LocalDateTime.now(), LocalDateTime.now());
 
-        Mockito.when(contaService.getConta(1L)).thenReturn(contaRequest);
+        Mockito.when(loginService.getLogin(1L)).thenReturn(loginRequest);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/1"))
                         .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + tokenCorren))
+                        .header("Authorization", "Bearer " + tokenGeren))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -87,33 +83,32 @@ public class ContaControllerTest {
         String stringJson = json.getResponse().getContentAsString();
 
 
-        ContaRecord contaResponse = objectMapper.readValue(stringJson, ContaRecord.class);
+        LoginRecord loginResponse = objectMapper.readValue(stringJson, LoginRecord.class);
 
-        Assertions.assertEquals(contaResponse.numero(), contaRequest.numero());
+        Assertions.assertEquals(loginRequest.id(), loginResponse.id());
 
     }
 
 
     @Test
-    void listaContaTest() throws Exception {
+    void listaLoginsTest() throws Exception {
 
-        ContaRecord contaRequest = new ContaRecord(1L, 1L, 1L, 1L, 1L,
-                new BigDecimal("300.55"), LocalDateTime.now());
+        LoginRecord loginRequest = new LoginRecord(1L, 1L, "teste@teste.com", "1234",
+                LocalDateTime.now(), LocalDateTime.now());
 
-        ContaRecord contaRequest2 = new ContaRecord(2L, 2L, 2L, 2L, 2L,
-                new BigDecimal("600.66"), LocalDateTime.now());
+        LoginRecord loginRequest2 = new LoginRecord(2L, 2L, "teste2@teste2.com", "12345768",
+                LocalDateTime.now(), LocalDateTime.now());
 
-        List<ContaRecord> listaConta = List.of(contaRequest, contaRequest2);
-
+        List<LoginRecord> listaLogin = List.of(loginRequest, loginRequest2);
 
         Pageable pageable = PageRequest.of(0, 2);
-        Page<ContaRecord> page = new PageImpl<>(listaConta, pageable, listaConta.size());
+        Page<LoginRecord> page = new PageImpl<>(listaLogin, pageable, listaLogin.size());
 
-        Mockito.when(contaService.listaConta(Mockito.any())).thenReturn(page);
+        Mockito.when(loginService.listaLogins(Mockito.any())).thenReturn(page);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("?page=0&size=1"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + tokenGeren))
+                        .header("Authorization", "Bearer " + tokenAdmin))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
@@ -129,21 +124,21 @@ public class ContaControllerTest {
     }
 
     @Test
-    void salvarContaTest() throws Exception {
+    void salvarLoginTest() throws Exception {
 
-        String mensagemRetorno = "Conta criada com sucesso";
+        String mensagemRetorno = "Login criado com sucesso";
 
-        ContaDTO contaDTO = ContaDTOFactory.getContaDTO();
+        LoginDTO loginDTO = LoginDTOFactory.getLogin();
 
-        String jsonRequest = objectMapper.writeValueAsString(contaDTO);
+        String jsonRequest = objectMapper.writeValueAsString(loginDTO);
 
 
-        Mockito.when(contaService.salvarConta(contaDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(loginService.salvarLogin(loginDTO)).thenReturn(mensagemRetorno);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(jsonRequest)
-                .header("Authorization", "Bearer " + tokenCorren))
+                        .header("Authorization", "Bearer " + tokenGeren))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
@@ -154,16 +149,19 @@ public class ContaControllerTest {
     }
 
     @Test
-    void atualizarContaTest() throws Exception {
+    void atualizarLoginTest() throws Exception {
 
-        String mensagemRetorno = "Conta atualizada com sucesso";
+        String mensagemRetorno = "Login Atualizado com sucesso";
 
-        ContaAtualizarDTO contaAtualizarDTO = ContaAtualizarDTOFactory.getContaAtualizarDTO();
+        LoginAtualizarDTO loginAtualizar = new LoginAtualizarDTO();
+        loginAtualizar.setIdLogin(1L);
+        loginAtualizar.setEmail("teste2@teste.com");
+        loginAtualizar.setSenha("999999");
 
-        String jsonRequest = objectMapper.writeValueAsString(contaAtualizarDTO);
+        String jsonRequest = objectMapper.writeValueAsString(loginAtualizar);
 
 
-        Mockito.when(contaService.atualizarConta(contaAtualizarDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(loginService.atualizarLogin(loginAtualizar)).thenReturn(mensagemRetorno);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -181,10 +179,10 @@ public class ContaControllerTest {
     @Test
     void excluirContaTest() throws Exception {
 
-        String mensagemRetorno = "Conta excluida com sucesso";
+        String mensagemRetorno = "Login Excluido com sucesso";
 
 
-        Mockito.when(contaService.excluirConta(1L)).thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagemRetorno));
+        Mockito.when(loginService.excluirLogin(1L)).thenReturn(ResponseEntity.status(HttpStatus.NO_CONTENT).body(mensagemRetorno));
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.delete(URL.concat("/1"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -197,6 +195,4 @@ public class ContaControllerTest {
         Assertions.assertEquals(mensagemRetorno, stringJson);
 
     }
-
-
 }
