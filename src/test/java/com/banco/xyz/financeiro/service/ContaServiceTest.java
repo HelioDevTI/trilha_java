@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -103,24 +102,24 @@ public class ContaServiceTest {
     @Test
     void salvarContaTest(){
 
-        String msgEsperada = "Salvo com Sucesso!";
+        Mockito.when(contaRepository.save(Mockito.any())).thenReturn(conta);
 
-        String msgRetorno = contaService.salvarConta(contaDTO);
+        ContaRecord contaRecord = contaService.salvarConta(contaDTO);
 
-        Assertions.assertEquals(msgEsperada, msgRetorno);
+        Assertions.assertEquals(conta.getId(), contaRecord.id());
 
     }
 
     @Test
     void atualizarContaTest(){
 
-        String msgEsperada = "Atualizado com Sucesso!";
 
         Mockito.when(contaRepository.getReferenceById(contaAtualizar.getId())).thenReturn(conta);
+        Mockito.when(contaRepository.save(Mockito.any())).thenReturn(conta);
 
-        String msgRetorno = contaService.atualizarConta(contaAtualizar);
+        ContaRecord contaRecord = contaService.atualizarConta(contaAtualizar);
 
-        Assertions.assertEquals(msgEsperada, msgRetorno);
+        Assertions.assertEquals(conta.getId(), contaRecord.id());
 
     }
 

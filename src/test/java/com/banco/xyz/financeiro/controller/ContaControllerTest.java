@@ -131,14 +131,16 @@ public class ContaControllerTest {
     @Test
     void salvarContaTest() throws Exception {
 
-        String mensagemRetorno = "Conta criada com sucesso";
+
 
         ContaDTO contaDTO = ContaDTOFactory.getContaDTO();
+        ContaRecord contaRecord = new ContaRecord(1L, contaDTO.getIdUsuario(), contaDTO.getNumero(), contaDTO.getDigito(),
+                contaDTO.getAgencia(), contaDTO.getSaldo(), LocalDateTime.now());
 
         String jsonRequest = objectMapper.writeValueAsString(contaDTO);
 
 
-        Mockito.when(contaService.salvarConta(contaDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(contaService.salvarConta(contaDTO)).thenReturn(contaRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -149,7 +151,10 @@ public class ContaControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+
+        ContaRecord contaResponse = objectMapper.readValue(stringJson, ContaRecord.class);
+
+        Assertions.assertEquals(contaRecord.numero(), contaResponse.numero());
 
     }
 
@@ -159,11 +164,14 @@ public class ContaControllerTest {
         String mensagemRetorno = "Conta atualizada com sucesso";
 
         ContaAtualizarDTO contaAtualizarDTO = ContaAtualizarDTOFactory.getContaAtualizarDTO();
+        ContaRecord contaRecord = new ContaRecord(contaAtualizarDTO.getId(), contaAtualizarDTO.getIdUsuario(),
+                contaAtualizarDTO.getNumero(), contaAtualizarDTO.getDigito(),  contaAtualizarDTO.getAgencia(),
+                contaAtualizarDTO.getSaldo(), LocalDateTime.now());
 
         String jsonRequest = objectMapper.writeValueAsString(contaAtualizarDTO);
 
 
-        Mockito.when(contaService.atualizarConta(contaAtualizarDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(contaService.atualizarConta(contaAtualizarDTO)).thenReturn(contaRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -174,7 +182,9 @@ public class ContaControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        ContaRecord contaResponse = objectMapper.readValue(stringJson, ContaRecord.class);
+
+        Assertions.assertEquals(contaRecord.numero(), contaResponse.numero());
 
     }
 
