@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/conta")
+@SecurityRequirement(name = "bearerAPI")
 public class ContaController {
 
 
@@ -24,6 +25,7 @@ public class ContaController {
     private ContaService contaService;
 
 
+    @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
     @GetMapping("/{id}")
     public ResponseEntity<ContaRecord> consultaConta(@PathVariable("id") Long id){
 
@@ -39,14 +41,14 @@ public class ContaController {
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
     @PostMapping
-    public ResponseEntity<String> salvarConta(@RequestBody ContaDTO contaDTO){
+    public ResponseEntity<ContaRecord> salvarConta(@RequestBody ContaDTO contaDTO){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(contaService.salvarConta(contaDTO));
     }
 
     @PreAuthorize(PerfisUsuarios.GERENTE)
     @PutMapping
-    public ResponseEntity<String> atualizarConta(@RequestBody ContaAtualizarDTO contaAtualizar){
+    public ResponseEntity<ContaRecord> atualizarConta(@RequestBody ContaAtualizarDTO contaAtualizar){
 
         return ResponseEntity.status(HttpStatus.OK).body(contaService.atualizarConta(contaAtualizar));
     }

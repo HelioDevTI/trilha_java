@@ -39,26 +39,29 @@ public class ContaService {
     }
 
 
-    public String salvarConta(ContaDTO contaDTO){
+    public ContaRecord salvarConta(ContaDTO contaDTO){
 
         Conta conta = new ModelMapper().map(contaDTO, Conta.class);
         conta.setDataCriacao(LocalDateTime.now());
         conta.setId(null);
-        contaRepository.save(conta);
+       Conta contaSalva = contaRepository.save(conta);
 
-        return "Salvo com Sucesso!";
+        return new ContaRecord(contaSalva.getId(), contaSalva.getIdUsuario(), contaSalva.getNumero(),
+                contaSalva.getDigito(), contaSalva.getAgencia(), contaSalva.getSaldo(), contaSalva.getDataCriacao());
     }
 
-    public String atualizarConta(ContaAtualizarDTO contaAtualizar){
+    public ContaRecord atualizarConta(ContaAtualizarDTO contaAtualizar){
 
         Conta conta = contaRepository.getReferenceById(contaAtualizar.getId());
         conta.setAgencia(contaAtualizar.getAgencia());
         conta.setNumero(contaAtualizar.getNumero());
         conta.setSaldo(contaAtualizar.getSaldo());
         conta.setDigito(contaAtualizar.getDigito());
-        contaRepository.save(conta);
+        Conta contaAtualizada = contaRepository.save(conta);
 
-        return "Atualizado com Sucesso!";
+        return  new ContaRecord(contaAtualizada.getId(), contaAtualizada.getIdUsuario(), contaAtualizada.getNumero(),
+                contaAtualizada.getDigito(), contaAtualizada.getAgencia(), contaAtualizada.getSaldo(),
+                contaAtualizada.getDataCriacao());
     }
 
     public ResponseEntity<String> excluirConta(Long id){
