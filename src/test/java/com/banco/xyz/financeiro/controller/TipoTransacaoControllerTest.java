@@ -67,7 +67,7 @@ public class TipoTransacaoControllerTest {
     @Test
     void consultaTipoTransacaoTest() throws Exception {
 
-        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord("$$$", "Dinheiro", true,
+        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord(1L, "$$$", "Dinheiro", true,
                 Tipo.DEBITO, LocalDateTime.now());
 
         Mockito.when(tipoTransacaoService.getTipoTransacao(1L)).thenReturn(tipoTransacaoRecord);
@@ -92,10 +92,10 @@ public class TipoTransacaoControllerTest {
     @Test
     void listaTipoTransacaoTest() throws Exception {
 
-        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord("$$$", "Dinheiro", true,
+        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord(1L, "$$$", "Dinheiro", true,
                 Tipo.DEBITO, LocalDateTime.now());
 
-        TipoTransacaoRecord tipoTransacaoRecord2 = new TipoTransacaoRecord("RRR", "Dinheiro REX", true,
+        TipoTransacaoRecord tipoTransacaoRecord2 = new TipoTransacaoRecord(1L, "RRR", "Dinheiro REX", true,
                 Tipo.CREDITO, LocalDateTime.now());
 
         List<TipoTransacaoRecord> listaTipoTransa = List.of(tipoTransacaoRecord, tipoTransacaoRecord2);
@@ -126,7 +126,8 @@ public class TipoTransacaoControllerTest {
     @Test
     void salvarTipoTransacaoTest() throws Exception {
 
-        String mensagemRetorno = "Tipo Transacap criada com sucesso";
+        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord(1L, "$$$", "Dinheiro", true,
+                Tipo.DEBITO, LocalDateTime.now());
 
         TipoTransacaoDTO tipoTransacaoDTO = new TipoTransacaoDTO();
         tipoTransacaoDTO.setTipo(Tipo.DEBITO);
@@ -137,7 +138,7 @@ public class TipoTransacaoControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(tipoTransacaoDTO);
 
 
-        Mockito.when(tipoTransacaoService.salvarTipoTransacao(tipoTransacaoDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(tipoTransacaoService.salvarTipoTransacao(tipoTransacaoDTO)).thenReturn(tipoTransacaoRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -148,14 +149,17 @@ public class TipoTransacaoControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        TipoTransacaoRecord tipoTransacaoRecordResponse = objectMapper.readValue(stringJson, TipoTransacaoRecord.class);
+
+        Assertions.assertEquals(tipoTransacaoRecord.tipo(), tipoTransacaoRecordResponse.tipo());
 
     }
 
     @Test
     void atualizarTipoTransacaoTest() throws Exception {
 
-        String mensagemRetorno = "Tipo Transacao atualizada com sucesso";
+        TipoTransacaoRecord tipoTransacaoRecord = new TipoTransacaoRecord(1L, "$$$", "Dinheiro", true,
+                Tipo.DEBITO, LocalDateTime.now());
 
         TipoTransacaoAtuliDTO tipoTransacaoAtuliDTO = new TipoTransacaoAtuliDTO();
         tipoTransacaoAtuliDTO.setTipo(Tipo.DEBITO);
@@ -167,7 +171,7 @@ public class TipoTransacaoControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(tipoTransacaoAtuliDTO);
 
 
-        Mockito.when(tipoTransacaoService.atualizarTipoTransacao(tipoTransacaoAtuliDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(tipoTransacaoService.atualizarTipoTransacao(tipoTransacaoAtuliDTO)).thenReturn(tipoTransacaoRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -178,7 +182,9 @@ public class TipoTransacaoControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        TipoTransacaoRecord tipoTransacaoRecordResponse = objectMapper.readValue(stringJson, TipoTransacaoRecord.class);
+
+        Assertions.assertEquals(tipoTransacaoRecord.tipo(), tipoTransacaoRecordResponse.tipo());
 
     }
 
