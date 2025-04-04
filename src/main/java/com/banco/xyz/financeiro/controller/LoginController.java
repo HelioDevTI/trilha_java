@@ -40,7 +40,7 @@ public class LoginController {
 
     @PreAuthorize(PerfisUsuarios.GERENTE)
     @PostMapping
-    public ResponseEntity<String> salvarLogin(@RequestBody @Valid LoginDTO loginDTO){
+    public ResponseEntity<LoginRecord> salvarLogin(@RequestBody @Valid LoginDTO loginDTO){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(loginService.salvarLogin(loginDTO));
 
@@ -48,7 +48,7 @@ public class LoginController {
 
     @PreAuthorize(PerfisUsuarios.GERENTE)
     @PutMapping
-    public ResponseEntity<String> atualizarLogin(@RequestBody @Valid LoginAtualizarDTO loginAtualizar){
+    public ResponseEntity<LoginRecord> atualizarLogin(@RequestBody @Valid LoginAtualizarDTO loginAtualizar){
 
         return ResponseEntity.ok(loginService.atualizarLogin(loginAtualizar));
     }

@@ -49,7 +49,7 @@ public class LoginService {
                 log.getSenha(), log.getDataLogin(), log.getDataAutlizacao()));
     }
 
-    public String salvarLogin(LoginDTO loginDTO){
+    public LoginRecord salvarLogin(LoginDTO loginDTO){
 
         Login login = new Login();
         login.setIdUsuario(loginDTO.getIdUsuario());
@@ -57,11 +57,13 @@ public class LoginService {
         login.setSenha(passwordEncoder.encode(loginDTO.getSenha()));
         login.setDataAutlizacao(LocalDateTime.now());
 
-        loginRepository.save(login);
-        return "Salvo com Sucesso!";
+        Login loginSalvo = loginRepository.save(login);
+
+        return new LoginRecord(loginSalvo.getId(), loginSalvo.getIdUsuario(), loginSalvo.getEmail(), loginSalvo.getSenha(),
+                loginSalvo.getDataLogin(), loginSalvo.getDataAutlizacao());
     }
 
-    public String atualizarLogin(LoginAtualizarDTO loginAtualizar){
+    public LoginRecord atualizarLogin(LoginAtualizarDTO loginAtualizar){
 
         Login login = loginRepository.getReferenceById(loginAtualizar.getIdLogin());
         login.setId(loginAtualizar.getIdLogin());
@@ -69,8 +71,10 @@ public class LoginService {
         login.setSenha(passwordEncoder.encode(loginAtualizar.getSenha()));
         login.setDataAutlizacao(LocalDateTime.now());
 
-        loginRepository.save(login);
-        return "Atualizado com Sucesso!";
+        Login loginAtualizado = loginRepository.save(login);
+
+        return new LoginRecord(loginAtualizado.getId(), loginAtualizado.getIdUsuario(), loginAtualizado.getEmail(),
+                loginAtualizado.getSenha(), loginAtualizado.getDataLogin(), loginAtualizado.getDataAutlizacao());
     }
 
     public ResponseEntity<String> excluirLogin(Long id){
