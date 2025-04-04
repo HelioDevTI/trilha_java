@@ -25,40 +25,44 @@ public class TipoTransacaoService {
 
     public TipoTransacaoRecord getTipoTransacao(Long idTipo){
 
-        return tipoTransacaoRepository.findById(idTipo).map(tipo -> new TipoTransacaoRecord(tipo.getMoeda(),
+        return tipoTransacaoRepository.findById(idTipo).map(tipo -> new TipoTransacaoRecord(tipo.getId(), tipo.getMoeda(),
                         tipo.getDescricao(), tipo.getAtivo(), tipo.getTipo(), tipo.getDataCriacao()))
                 .orElseThrow(EntityNotFoundException::new);
     }
 
     public Page<TipoTransacaoRecord> listaTipoTransacao(Pageable paginacao){
 
-        return tipoTransacaoRepository.findAll(paginacao).map(tipo -> new TipoTransacaoRecord(tipo.getMoeda(),
+        return tipoTransacaoRepository.findAll(paginacao).map(tipo -> new TipoTransacaoRecord(tipo.getId(), tipo.getMoeda(),
                 tipo.getDescricao(), tipo.getAtivo(), tipo.getTipo(), tipo.getDataCriacao()));
     }
 
 
-    public String salvarTipoTransacao(TipoTransacaoDTO tipoDTO){
+    public TipoTransacaoRecord salvarTipoTransacao(TipoTransacaoDTO tipoDTO){
 
         TipoTransacao tipo =  new ModelMapper().map(tipoDTO, TipoTransacao.class);
         tipo.setId(null);
         tipo.setDataCriacao(LocalDateTime.now());
 
-        tipoTransacaoRepository.save(tipo);
+        TipoTransacao tipoSalvo = tipoTransacaoRepository.save(tipo);
 
-        return "Salvo com Sucesso!";
+        return new TipoTransacaoRecord(tipo.getId(), tipoSalvo.getMoeda(), tipoSalvo.getDescricao(),
+                tipoSalvo.getAtivo(), tipoSalvo.getTipo(), tipoSalvo.getDataCriacao());
     }
 
-    public String atualizarTipoTransacao(TipoTransacaoAtuliDTO tipoDTO){
+    public TipoTransacaoRecord atualizarTipoTransacao(TipoTransacaoAtuliDTO tipoDTO){
 
         TipoTransacao tipo =  new ModelMapper().map(tipoDTO, TipoTransacao.class);
         tipo.setDataCriacao(LocalDateTime.now());
 
         if(tipoTransacaoRepository.existsById(tipo.getId())){
-            tipoTransacaoRepository.save(tipo);
-            return "Atualizado com Sucesso!";
+
+           TipoTransacao tipoAtualizado = tipoTransacaoRepository.save(tipo);
+            return new TipoTransacaoRecord(tipo.getId(), tipoAtualizado.getMoeda(), tipoAtualizado.getDescricao(),
+                    tipoAtualizado.getAtivo(), tipoAtualizado.getTipo(), tipoAtualizado.getDataCriacao());
+
         }
 
-        return "Nao encontrado!";
+        return null;
 
     }
 
