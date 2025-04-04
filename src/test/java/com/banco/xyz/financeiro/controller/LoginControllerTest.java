@@ -129,11 +129,13 @@ public class LoginControllerTest {
         String mensagemRetorno = "Login criado com sucesso";
 
         LoginDTO loginDTO = LoginDTOFactory.getLogin();
+       LoginRecord loginRecord = new LoginRecord(1L, loginDTO.getIdUsuario(),
+               loginDTO.getEmail(), loginDTO.getSenha(), LocalDateTime.now(), LocalDateTime.now());
 
         String jsonRequest = objectMapper.writeValueAsString(loginDTO);
 
 
-        Mockito.when(loginService.salvarLogin(loginDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(loginService.salvarLogin(loginDTO)).thenReturn(loginRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -144,24 +146,27 @@ public class LoginControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        LoginRecord loginResponse = objectMapper.readValue(stringJson, LoginRecord.class);
+
+        Assertions.assertEquals(loginRecord.id(), loginResponse.id());
 
     }
 
     @Test
     void atualizarLoginTest() throws Exception {
 
-        String mensagemRetorno = "Login Atualizado com sucesso";
-
         LoginAtualizarDTO loginAtualizar = new LoginAtualizarDTO();
         loginAtualizar.setIdLogin(1L);
         loginAtualizar.setEmail("teste2@teste.com");
         loginAtualizar.setSenha("999999");
 
+        LoginRecord loginRecord = new LoginRecord(loginAtualizar.getIdLogin(), 1L,
+                loginAtualizar.getEmail(), loginAtualizar.getSenha(), LocalDateTime.now(), LocalDateTime.now());
+
         String jsonRequest = objectMapper.writeValueAsString(loginAtualizar);
 
 
-        Mockito.when(loginService.atualizarLogin(loginAtualizar)).thenReturn(mensagemRetorno);
+        Mockito.when(loginService.atualizarLogin(loginAtualizar)).thenReturn(loginRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -172,7 +177,9 @@ public class LoginControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        LoginRecord loginResponse = objectMapper.readValue(stringJson, LoginRecord.class);
+
+        Assertions.assertEquals(loginRecord.id(), loginResponse.id());
 
     }
 

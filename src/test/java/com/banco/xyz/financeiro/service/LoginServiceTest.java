@@ -1,6 +1,7 @@
 package com.banco.xyz.financeiro.service;
 
 import com.banco.xyz.financeiro.dto.LoginAtualizarDTO;
+import com.banco.xyz.financeiro.dto.LoginDTO;
 import com.banco.xyz.financeiro.factory.LoginDTOFactory;
 import com.banco.xyz.financeiro.factory.LoginFactory;
 import com.banco.xyz.financeiro.model.Login;
@@ -84,28 +85,33 @@ public class LoginServiceTest {
     @Test
     void salvarLoginTest(){
 
-        String msg = "Salvo com Sucesso!";
+        LoginDTO loginDTO = LoginDTOFactory.getLogin();
+        Login login = LoginFactory.getLogin();
 
-        String msgRetorno = loginService.salvarLogin(LoginDTOFactory.getLogin());
 
-        Assertions.assertEquals(msg, msgRetorno);
+        Mockito.when(loginRepository.save(Mockito.any())).thenReturn(login);
+
+        LoginRecord loginRecordSalvo = loginService.salvarLogin(loginDTO);
+
+        Assertions.assertEquals(loginDTO.getEmail(), loginRecordSalvo.email());
     }
 
     @Test
     void atualizarLoginTest(){
 
-        String msg = "Atualizado com Sucesso!";
+        LoginAtualizarDTO loginDTO = new LoginAtualizarDTO();
+        loginDTO.setSenha("122333");
+        loginDTO.setEmail("teste@teste.com");
+        loginDTO.setIdLogin(1L);
 
-        LoginAtualizarDTO login = new LoginAtualizarDTO();
-        login.setSenha("122333");
-        login.setEmail("teste@teste.com");
-        login.setIdLogin(1L);
+        Login login = LoginFactory.getLogin();
 
-        Mockito.when(loginRepository.getReferenceById(login.getIdLogin())).thenReturn(LoginFactory.getLogin());
+        Mockito.when(loginRepository.getReferenceById(loginDTO.getIdLogin())).thenReturn(LoginFactory.getLogin());
+        Mockito.when(loginRepository.save(Mockito.any())).thenReturn(login);
 
-        String msgRetorno = loginService.atualizarLogin(login);
+        LoginRecord loginRecordAtualizado = loginService.atualizarLogin(loginDTO);
 
-        Assertions.assertEquals(msg, msgRetorno);
+        Assertions.assertEquals(login.getEmail(), loginRecordAtualizado.email());
     }
 
     @Test
