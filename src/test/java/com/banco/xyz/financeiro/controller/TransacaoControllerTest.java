@@ -243,14 +243,17 @@ public class TransacaoControllerTest {
     @Test
     void salvarTransacaoTest() throws Exception {
 
-        String mensagemRetorno = "Transacao criada com sucesso";
+
 
         TransacaoDTO transacaoDTO = TransacaoDTOFactory.getTransacaoDTO();
+        TransacaoRecord transacaoRecord = new TransacaoRecord(transacaoDTO.getIdTipo(), transacaoDTO.getIdTipo(),
+                transacaoDTO.getIdConta(), transacaoDTO.getDescricao(), transacaoDTO.getValor(),
+                 new BigDecimal("20.00"), LocalDateTime.now());
 
         String jsonRequest = objectMapper.writeValueAsString(transacaoDTO);
 
 
-        Mockito.when(transacaoService.salvarTransacao(transacaoDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(transacaoService.salvarTransacao(transacaoDTO)).thenReturn(transacaoRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -261,21 +264,25 @@ public class TransacaoControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        TransacaoRecord transacaoRecordRetorno = objectMapper.readValue(stringJson, TransacaoRecord.class);
+
+        Assertions.assertEquals(transacaoRecord.id(), transacaoRecordRetorno.id());
 
     }
 
     @Test
     void atualizarTransacaoTest() throws Exception {
 
-        String mensagemRetorno = "Transacao atualizada com sucesso";
 
         TransacaoAtualizarDTO transacaoDTO = TransacaoAtualizarDTOFactory.getTransacaoAtualizarDTO();
+        TransacaoRecord transacaoRecord = new TransacaoRecord(transacaoDTO.getIdTipo(), transacaoDTO.getIdTipo(),
+                1L, transacaoDTO.getDescricao(), transacaoDTO.getValor(),
+                new BigDecimal("20.00"), LocalDateTime.now());
 
         String jsonRequest = objectMapper.writeValueAsString(transacaoDTO);
 
 
-        Mockito.when(transacaoService.atualizarTransacao(transacaoDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(transacaoService.atualizarTransacao(transacaoDTO)).thenReturn(transacaoRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -286,7 +293,9 @@ public class TransacaoControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        TransacaoRecord transacaoRecordRetorno = objectMapper.readValue(stringJson, TransacaoRecord.class);
+
+        Assertions.assertEquals(transacaoRecord.id(), transacaoRecordRetorno.id());
 
     }
 
