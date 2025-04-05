@@ -126,14 +126,14 @@ public class UsuarioControllerTest {
     @Test
     void salvarUsuarioTest() throws Exception {
 
-        String mensagemRetorno = "Usuario criada com sucesso";
-
         UsuarioDTO usuarioDTO = UsuarioDTOFactory.getUsuarioDTO();
+        UsuarioRecord usuarioRecord = new UsuarioRecord(1L ,usuarioDTO.getNome(), usuarioDTO.getPerfil(),
+                usuarioDTO.getCpf(), LocalDateTime.now());
 
         String jsonRequest = objectMapper.writeValueAsString(usuarioDTO);
 
 
-        Mockito.when(usuarioService.savarUsuario(usuarioDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(usuarioService.savarUsuario(usuarioDTO)).thenReturn(usuarioRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.post(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -144,16 +144,18 @@ public class UsuarioControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        UsuarioRecord usuarioResponse = objectMapper.readValue(stringJson, UsuarioRecord.class);
+
+        Assertions.assertEquals(usuarioResponse.id(), usuarioRecord.id());
 
     }
 
     @Test
     void atualizarUsuarioTest() throws Exception {
 
-        String mensagemRetorno = "Usuario atualizado com sucesso";
-
         UsuarioDTO usuarioDTO = UsuarioDTOFactory.getUsuarioDTO();
+        UsuarioRecord usuarioRecord = new UsuarioRecord(1L ,usuarioDTO.getNome(), usuarioDTO.getPerfil(),
+                usuarioDTO.getCpf(), LocalDateTime.now());
 
         UsuarioAtualizarDTO usuarioAtualizarDTO = new UsuarioAtualizarDTO();
         usuarioAtualizarDTO.setId(1L);
@@ -165,7 +167,7 @@ public class UsuarioControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(usuarioAtualizarDTO);
 
 
-        Mockito.when(usuarioService.atualizarUsuario(usuarioAtualizarDTO)).thenReturn(mensagemRetorno);
+        Mockito.when(usuarioService.atualizarUsuario(usuarioAtualizarDTO)).thenReturn(usuarioRecord);
 
         MvcResult json = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -176,7 +178,9 @@ public class UsuarioControllerTest {
 
         String stringJson = json.getResponse().getContentAsString();
 
-        Assertions.assertEquals(mensagemRetorno, stringJson);
+        UsuarioRecord usuarioResponse = objectMapper.readValue(stringJson, UsuarioRecord.class);
+
+        Assertions.assertEquals(usuarioResponse.id(), usuarioRecord.id());
 
     }
 
