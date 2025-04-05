@@ -45,7 +45,7 @@ public class UsuarioController {
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
     @PostMapping()
-    public ResponseEntity<String> savarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioRecord> savarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.savarUsuario(usuarioDTO));
 
@@ -53,7 +53,7 @@ public class UsuarioController {
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
     @PutMapping()
-    public ResponseEntity<String> autualizarUsuario(@RequestBody @Valid UsuarioAtualizarDTO usuarioAtualizar){
+    public ResponseEntity<UsuarioRecord> autualizarUsuario(@RequestBody @Valid UsuarioAtualizarDTO usuarioAtualizar){
 
 
         return ResponseEntity.ok(usuarioService.atualizarUsuario(usuarioAtualizar));

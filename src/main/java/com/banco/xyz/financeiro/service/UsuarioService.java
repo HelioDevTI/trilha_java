@@ -37,7 +37,7 @@ public class UsuarioService {
                 usu.getPerfil(), usu.getCpf(),  usu.getDataCriacao()));
     }
 
-    public String savarUsuario(UsuarioDTO usuarioDTO){
+    public UsuarioRecord savarUsuario(UsuarioDTO usuarioDTO){
 
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioDTO.getNome());
@@ -45,19 +45,20 @@ public class UsuarioService {
         usuario.setPerfil(usuarioDTO.getPerfil());
         usuario.setDataCriacao(LocalDateTime.now());
 
-        usuarioRepository.save(usuario);
-        return "Salvo com Sucesso!";
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        return new UsuarioRecord(usuarioSalvo);
     }
 
-    public String atualizarUsuario(UsuarioAtualizarDTO usuarioAtualizar){
+    public UsuarioRecord atualizarUsuario(UsuarioAtualizarDTO usuarioAtualizar){
 
         Usuario usuario = usuarioRepository.getReferenceById(usuarioAtualizar.getId());
         usuario.setNome(usuarioAtualizar.getNome());
         usuario.setCpf(usuarioAtualizar.getCpf());
         usuario.setPerfil(usuarioAtualizar.getPerfil());
 
-        usuarioRepository.save(usuario);
-        return "Atualizado com Sucesso!";
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+
+        return new UsuarioRecord(usuarioAtualizado);
     }
 
     public ResponseEntity<String> excluirUsuario(Long id){
