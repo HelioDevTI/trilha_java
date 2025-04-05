@@ -66,7 +66,7 @@ public class TransacaoService {
     }
 
 
-    public String salvarTransacao(TransacaoDTO transacaoDTO){
+    public TransacaoRecord salvarTransacao(TransacaoDTO transacaoDTO){
 
 
         if(!calculoTransacoes.atualizaSaldo(transacaoDTO.getIdConta(), transacaoDTO.getValor())){
@@ -80,12 +80,13 @@ public class TransacaoService {
         transacao.setValor(transacaoDTO.getValor());
         transacao.setDataTransacao(LocalDateTime.now());
         transacao.setValorConvertido(calculoTransacoes.coversaoTransacao(transacaoDTO.getValor(), transacaoDTO.getIdTipo()));
-        transacaoRepository.save(transacao);
+        Transacao transacaoSalva =transacaoRepository.save(transacao);
 
-        return "Salvo com Sucesso!";
+        return new TransacaoRecord(transacaoSalva.getId(), transacaoSalva.getIdTipo(), transacaoSalva.getIdConta(),
+                transacaoSalva.getDescricao(), transacaoSalva.getValor(), transacaoSalva.getValorConvertido(), transacaoSalva.getDataTransacao());
     }
 
-    public String atualizarTransacao(TransacaoAtualizarDTO transacaoDTO){
+    public TransacaoRecord atualizarTransacao(TransacaoAtualizarDTO transacaoDTO){
 
         Transacao transacao = transacaoRepository.getReferenceById(transacaoDTO.getId());
 
@@ -98,9 +99,11 @@ public class TransacaoService {
         transacao.setDescricao(transacaoDTO.getDescricao());
         transacao.setValor(transacaoDTO.getValor());
         transacao.setValorConvertido(calculoTransacoes.coversaoTransacao(transacaoDTO.getValor(), transacaoDTO.getIdTipo()));
-        transacaoRepository.save(transacao);
+        Transacao transacaoAuatilizada = transacaoRepository.save(transacao);
 
-        return "Atualizado com Sucesso!";
+        return  new TransacaoRecord(transacaoAuatilizada.getId(), transacaoAuatilizada.getIdTipo(), transacaoAuatilizada.getIdConta(),
+                transacaoAuatilizada.getDescricao(), transacaoAuatilizada.getValor(),
+                transacaoAuatilizada.getValorConvertido(), transacaoAuatilizada.getDataTransacao());
     }
 
     public ResponseEntity<String> excluirTransacao(Long id){

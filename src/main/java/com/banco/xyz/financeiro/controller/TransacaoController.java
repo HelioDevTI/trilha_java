@@ -57,14 +57,14 @@ public class TransacaoController {
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA)
     @PostMapping
-    public ResponseEntity<String> salvarTransacao(@RequestBody TransacaoDTO transacaoDTO){
+    public ResponseEntity<TransacaoRecord> salvarTransacao(@RequestBody TransacaoDTO transacaoDTO){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.salvarTransacao(transacaoDTO));
     }
 
     @PreAuthorize(PerfisUsuarios.GERENTE)
     @PutMapping
-    public ResponseEntity<String> atualizarTransacao(@RequestBody TransacaoAtualizarDTO transacaoDTO){
+    public ResponseEntity<TransacaoRecord> atualizarTransacao(@RequestBody TransacaoAtualizarDTO transacaoDTO){
 
         return ResponseEntity.status(HttpStatus.OK).body(transacaoService.atualizarTransacao(transacaoDTO));
     }
