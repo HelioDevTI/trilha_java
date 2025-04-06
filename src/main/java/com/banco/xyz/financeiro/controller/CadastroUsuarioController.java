@@ -4,6 +4,7 @@ import com.banco.xyz.financeiro.constant.PerfisUsuarios;
 import com.banco.xyz.financeiro.dto.DadosCorrentistaDTO;
 import com.banco.xyz.financeiro.recod.CorrentistaRecord;
 import com.banco.xyz.financeiro.service.CadastroUsuarioService;
+import com.banco.xyz.financeiro.util.FinanceiroUtil;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class CadastroUsuarioController {
     @PostMapping("/correntista")
     public ResponseEntity<DadosCorrentistaDTO> cadastroCorrentista(@RequestBody @Valid CorrentistaRecord correntista){
 
+        FinanceiroUtil.validarCPF(correntista.cpf());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cadastroUsuarioService.cadastroCorrentista(correntista));
 

@@ -5,6 +5,7 @@ import com.banco.xyz.financeiro.dto.UsuarioAtualizarDTO;
 import com.banco.xyz.financeiro.dto.UsuarioDTO;
 import com.banco.xyz.financeiro.recod.UsuarioRecord;
 import com.banco.xyz.financeiro.service.UsuarioService;
+import com.banco.xyz.financeiro.util.FinanceiroUtil;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class UsuarioController {
     @PostMapping()
     public ResponseEntity<UsuarioRecord> savarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
 
+
+        FinanceiroUtil.validarCPF(usuarioDTO.getCpf());
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.savarUsuario(usuarioDTO));
 
     }
@@ -55,7 +58,7 @@ public class UsuarioController {
     @PutMapping()
     public ResponseEntity<UsuarioRecord> autualizarUsuario(@RequestBody @Valid UsuarioAtualizarDTO usuarioAtualizar){
 
-
+        FinanceiroUtil.validarCPF(usuarioAtualizar.getCpf());
         return ResponseEntity.ok(usuarioService.atualizarUsuario(usuarioAtualizar));
     }
 

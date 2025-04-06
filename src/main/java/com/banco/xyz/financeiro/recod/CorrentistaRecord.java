@@ -1,5 +1,6 @@
 package com.banco.xyz.financeiro.recod;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -26,6 +27,7 @@ public record CorrentistaRecord(
         BigDecimal valorDeposito,
 
         @NotBlank
+        @Email(message = "Email inválido")
         String email,
 
         @NotBlank

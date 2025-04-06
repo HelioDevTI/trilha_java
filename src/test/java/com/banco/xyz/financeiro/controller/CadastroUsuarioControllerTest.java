@@ -93,7 +93,7 @@ public class CadastroUsuarioControllerTest {
     void cadastroCorrentistaTest() throws Exception {
 
 
-        CorrentistaRecord correntistaRecord = new CorrentistaRecord("nome1", "111.111.111-11", 1L, 1L,
+        CorrentistaRecord correntistaRecord = new CorrentistaRecord("nome1", "272.132.030-02", 1L, 1L,
                 1L, new BigDecimal("10.0"), "teste@email.com", "0123456");
 
         String requestJson = objectMapper.writeValueAsString(correntistaRecord);

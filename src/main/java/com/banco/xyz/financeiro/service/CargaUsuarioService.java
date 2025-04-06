@@ -8,6 +8,7 @@ import com.banco.xyz.financeiro.repository.ContaRepository;
 import com.banco.xyz.financeiro.repository.LoginRepository;
 import com.banco.xyz.financeiro.repository.PerfilRepository;
 import com.banco.xyz.financeiro.repository.UsuarioRepository;
+import com.banco.xyz.financeiro.util.FinanceiroUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -91,6 +92,8 @@ public class CargaUsuarioService {
         Long digitoConta = null;
         Long agenciaConta = null;
         BigDecimal valorDeposito = null;
+
+        FinanceiroUtil.validarCPF(cpf);
 
         if(isCorrentista) {
             numeroConta = Double.valueOf(linha.getCell(5).getNumericCellValue()).longValue();

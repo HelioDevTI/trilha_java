@@ -7,7 +7,7 @@ public interface UsuarioDTOFactory {
     static UsuarioDTO getUsuarioDTO(){
 
         UsuarioDTO usuarioDTO = new UsuarioDTO();
-        usuarioDTO.setCpf("111111111111");
+        usuarioDTO.setCpf("272.132.030-02");
         usuarioDTO.setNome("Usuario");
         usuarioDTO.setPerfil(1L);
 
