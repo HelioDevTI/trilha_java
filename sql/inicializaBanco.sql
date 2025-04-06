@@ -72,16 +72,16 @@ VALUES(3, 'CORRENTISTA', 'Usuario de da conta correte', CURRENT_TIMESTAMP());
 
 
 INSERT INTO usuario(id, perfil_id, nome, cpf, data_criacao)
-values(1, 1, 'Administrador', '666.666.666-66', CURRENT_TIMESTAMP());
+values(1, 1, 'Administrador', '272.132.030-02', CURRENT_TIMESTAMP());
 
 INSERT INTO usuario(id, perfil_id, nome, cpf, data_criacao)
-values(2, 2, 'Gerente', '777.777.777-77', CURRENT_TIMESTAMP());
+values(2, 2, 'Gerente', '401.308.810-07', CURRENT_TIMESTAMP());
 
 INSERT INTO usuario(id, perfil_id, nome, cpf, data_criacao)
-values(3, 3, 'Correntista', '888.888.888-88', CURRENT_TIMESTAMP());
+values(3, 3, 'Correntista', '023.822.520-81', CURRENT_TIMESTAMP());
 
 INSERT INTO usuario(id, perfil_id, nome, cpf, data_criacao)
-values(4, 3, 'Segundo Correntista', '000.000.000-00', CURRENT_TIMESTAMP());
+values(4, 3, 'Segundo Correntista', '550.125.620-70', CURRENT_TIMESTAMP());
 
 
 INSERT INTO login (id, usuario_id, email, senha, data_login, data_atualizacao)
