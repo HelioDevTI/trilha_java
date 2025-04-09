@@ -72,7 +72,7 @@ public class TipoTransacaoService {
 
         if(tipo.getId() == null){
 
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo Transacao nao encontrada");
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo Transacao nao encontrada");
         }
 
         tipoTransacaoRepository.delete(tipo);
