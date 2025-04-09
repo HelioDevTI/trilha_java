@@ -3,7 +3,9 @@ package com.banco.xyz.financeiro.service;
 import com.banco.xyz.financeiro.business.CalculoTransacoes;
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
+import com.banco.xyz.financeiro.enumeration.Mes;
 import com.banco.xyz.financeiro.model.Transacao;
+import com.banco.xyz.financeiro.proxy.DadosMetricasTransacaoProxy;
 import com.banco.xyz.financeiro.proxy.DadosTransacaoProxy;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.repository.TransacaoRepository;
@@ -17,8 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.List;
 
 @Slf4j
@@ -65,6 +66,16 @@ public class TransacaoService {
 
     }
 
+    public List<DadosMetricasTransacaoProxy> consultaMetricasTransacoes(Long idConta, Mes mes, Long ano){
+
+        YearMonth yearMonth = YearMonth.of(ano.intValue(), mes.getMesJavaTime());
+        LocalDate ultimoDiaDoMes = yearMonth.atEndOfMonth();
+
+        LocalDateTime iniPeriodo = LocalDateTime.of(ano.intValue(),mes.getMesJavaTime(),1,0,0,0);
+        LocalDateTime fimPeriodo = LocalDateTime.of(ultimoDiaDoMes, LocalTime.of( 23,59,59));
+
+        return transacaoRepository.consutaMetricasTrasacoes(idConta, iniPeriodo, fimPeriodo);
+    }
 
     public TransacaoRecord salvarTransacao(TransacaoDTO transacaoDTO){
 

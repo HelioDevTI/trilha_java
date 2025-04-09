@@ -3,6 +3,8 @@ package com.banco.xyz.financeiro.controller;
 import com.banco.xyz.financeiro.constant.PerfisUsuarios;
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
+import com.banco.xyz.financeiro.enumeration.Mes;
+import com.banco.xyz.financeiro.proxy.DadosMetricasTransacaoProxy;
 import com.banco.xyz.financeiro.proxy.DadosTransacaoProxy;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.service.TransacaoService;
@@ -18,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 @RestController
@@ -54,6 +57,16 @@ public class TransacaoController {
 
         return ResponseEntity.ok().body(transacaoService.consultaTransacao(idConta, dataInicio, dataFim, tipoTransacao, descCompra));
     }
+
+    @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
+    @GetMapping("/consulta/metricas/conta/{idConta}/mes/{mes}/ano/{ano}")
+    public ResponseEntity<List<DadosMetricasTransacaoProxy>> consultaMetricasTransacao(@PathVariable("idConta") Long idConta,
+                                                                                       @PathVariable("mes") Mes mes,
+                                                                                       @PathVariable("ano") Long ano){
+
+        return ResponseEntity.ok().body(transacaoService.consultaMetricasTransacoes(idConta, mes, ano));
+    }
+
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA)
     @PostMapping
