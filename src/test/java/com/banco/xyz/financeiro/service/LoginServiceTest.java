@@ -117,7 +117,7 @@ public class LoginServiceTest {
     @Test
     void excluirLoginNaoEncontradoTest(){
 
-        String msg = "Usuario nao encontrado";
+        String msg = "Login nao encontrado";
 
         Mockito.when(loginRepository.getReferenceById(1L)).thenReturn(new Login());
 
@@ -130,7 +130,7 @@ public class LoginServiceTest {
     @Test
     void excluirLoginTest(){
 
-        String msg = "Usuario excluido com Sucesso!";
+        String msg = "Login excluido com Sucesso!";
 
         Mockito.when(loginRepository.getReferenceById(1L)).thenReturn(LoginFactory.getLogin());
 

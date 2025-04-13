@@ -2,14 +2,18 @@ package com.banco.xyz.financeiro.controller;
 
 import com.banco.xyz.financeiro.dto.TransacaoAtualizarDTO;
 import com.banco.xyz.financeiro.dto.TransacaoDTO;
+import com.banco.xyz.financeiro.enumeration.Mes;
+import com.banco.xyz.financeiro.factory.DadosMetricasTransacaoProxyFactory;
 import com.banco.xyz.financeiro.factory.TokenFactory;
 import com.banco.xyz.financeiro.factory.TransacaoAtualizarDTOFactory;
 import com.banco.xyz.financeiro.factory.TransacaoDTOFactory;
+import com.banco.xyz.financeiro.proxy.DadosMetricasTransacaoProxy;
 import com.banco.xyz.financeiro.proxy.DadosTransacaoProxy;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.service.TransacaoService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -316,6 +320,27 @@ public class TransacaoControllerTest {
         String stringJson = json.getResponse().getContentAsString();
 
         Assertions.assertEquals(mensagemRetorno, stringJson);
+
+    }
+
+    @Test
+    void consultaMetricasTransacaoTest() throws Exception {
+
+        List<DadosMetricasTransacaoProxy> listaDados = DadosMetricasTransacaoProxyFactory.getDadosMetricasTransacaoProxy();
+
+        Mockito.when(transacaoService.consultaMetricasTransacoes(1L, Mes.JANEIRO, 2025L)).thenReturn(listaDados);
+
+        MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/consulta/metricas/conta/1/mes/JANEIRO/ano/2025"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + tokenGeren))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+
+        String stringJson = json.getResponse().getContentAsString();
+        ArrayNode jsonArray = (ArrayNode) objectMapper.readTree(stringJson);
+
+        Assertions.assertEquals(listaDados.get(0).getCodigo(), jsonArray.get(0).get("codigo").asLong());
 
     }
 }
