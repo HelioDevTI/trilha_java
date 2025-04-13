@@ -6,8 +6,6 @@ import com.banco.xyz.financeiro.model.Transacao;
 import com.banco.xyz.financeiro.recod.TransacaoRecord;
 import com.banco.xyz.financeiro.repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

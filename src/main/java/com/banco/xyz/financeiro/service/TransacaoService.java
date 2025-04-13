@@ -81,7 +81,7 @@ public class TransacaoService {
 
 
         if(!calculoTransacoes.atualizaSaldo(transacaoDTO.getIdConta(), transacaoDTO.getValor())){
-            ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Transacao não pode ser comcluida, saldo menor");
+            throw new RuntimeException("Transacao não pode ser comcluida, saldo menor");
         }
 
         Transacao transacao = new Transacao();
@@ -103,7 +103,7 @@ public class TransacaoService {
 
 
         if(!calculoTransacoes.atualizaSaldo(transacao.getIdConta(), transacaoDTO.getValor().subtract(transacao.getValor()))){
-            ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Transacao não pode ser comcluida, saldo menor");
+            throw new RuntimeException("Transacao não pode ser comcluida, saldo menor");
         }
 
         transacao.setIdTipo(transacaoDTO.getIdTipo());
@@ -121,14 +121,16 @@ public class TransacaoService {
 
         Transacao transacao = transacaoRepository.getReferenceById(id);
 
-        if(!calculoTransacoes.atualizaSaldo(transacao.getIdConta(), transacao.getValor().multiply(BigDecimal.valueOf(-1)))){
-            ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Transacao não pode ser comcluida, saldo menor");
-        }
-
         if(transacao.getId() == null){
 
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transacao nao encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transacao nao encontrada");
         }
+
+
+        if(!calculoTransacoes.atualizaSaldo(transacao.getIdConta(), transacao.getValor().multiply(BigDecimal.valueOf(-1)))){
+           return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Transacao não pode ser comcluida, saldo menor");
+        }
+
 
         transacaoRepository.delete(transacao);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Transacao excluida com Sucesso!");

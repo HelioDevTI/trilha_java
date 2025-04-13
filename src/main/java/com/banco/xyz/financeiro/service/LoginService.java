@@ -83,11 +83,11 @@ public class LoginService {
 
         if(login.getId() == null){
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario nao encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Login nao encontrado");
         }
 
         loginRepository.delete(login);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuario excluido com Sucesso!");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Login excluido com Sucesso!");
     }
 
     public Authentication fazerLogin(DadosAutenticacao dadosAutenticacao){

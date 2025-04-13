@@ -102,7 +102,7 @@ public class CargaUsuarioService {
             valorDeposito = BigDecimal.valueOf(linha.getCell(8).getNumericCellValue());
         }
 
-
+        log.info(">>>>>> ADICIONADO {}", nome);
 
         listaDadosArquivo.add(new DadosArquivoCargaUsuario(nome, cpf, perfil, email, senha, numeroConta, digitoConta, agenciaConta, valorDeposito, isCorrentista));
 
