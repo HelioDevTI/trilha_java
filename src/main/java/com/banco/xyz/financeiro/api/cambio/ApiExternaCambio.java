@@ -68,11 +68,13 @@ public class ApiExternaCambio {
             try {
                 apiCambioDTO = objectMapper.readValue(response.toString(), ApiCambioDTO.class);
             }catch (IOException e){
+                log.error("Erro para Chamar API Erro [{}]", e.getMessage());
                 throw new RuntimeException(e);
             }
 
 
         } catch (IOException e)  {
+            log.error("Erro  BufferedReade Erro = [{}]", e.getMessage());
             throw new RuntimeException(e);
         } finally {
             assert connection != null;

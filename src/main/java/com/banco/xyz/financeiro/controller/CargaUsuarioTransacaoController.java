@@ -2,6 +2,7 @@ package com.banco.xyz.financeiro.controller;
 
 import com.banco.xyz.financeiro.constant.PerfisUsuarios;
 import com.banco.xyz.financeiro.dto.DadosArquivoCargaUsuario;
+import com.banco.xyz.financeiro.dto.ResumoDadosArquivoTransacaoDTO;
 import com.banco.xyz.financeiro.service.CargaTransacaoService;
 import com.banco.xyz.financeiro.service.CargaUsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -30,7 +31,7 @@ public class CargaUsuarioTransacaoController {
     private CargaUsuarioService serviceUsuario;
 
     @PostMapping(value = "/transacao", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> processarTrasacoes(@RequestParam("arquivo")MultipartFile arquivo){
+    public ResponseEntity<ResumoDadosArquivoTransacaoDTO> processarTrasacoes(@RequestParam("arquivo")MultipartFile arquivo){
 
         return ResponseEntity.ok().body(serviceTransacao.processarTrasacoes(arquivo));
     }

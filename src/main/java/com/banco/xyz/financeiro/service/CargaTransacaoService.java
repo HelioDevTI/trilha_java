@@ -2,6 +2,7 @@ package com.banco.xyz.financeiro.service;
 
 import com.banco.xyz.financeiro.business.CalculoTransacoes;
 import com.banco.xyz.financeiro.dto.DadosArquivoCargaTransacao;
+import com.banco.xyz.financeiro.dto.ResumoDadosArquivoTransacaoDTO;
 import com.banco.xyz.financeiro.model.Transacao;
 import com.banco.xyz.financeiro.repository.ContaRepository;
 import com.banco.xyz.financeiro.repository.TipoTransacaoRepository;
@@ -23,7 +24,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class CargaTransacaoService {
@@ -41,7 +41,7 @@ public class CargaTransacaoService {
     private CalculoTransacoes calculoTransacoes;
 
 
-    public String processarTrasacoes(MultipartFile arquivo){
+    public ResumoDadosArquivoTransacaoDTO processarTrasacoes(MultipartFile arquivo){
 
         List<DadosArquivoCargaTransacao>  listaDadosArquivo = new ArrayList<>();
 
@@ -95,9 +95,13 @@ public class CargaTransacaoService {
 
     }
 
-    private String salvarTrasacoes(List<DadosArquivoCargaTransacao> dadosArquivo,  int quantTransaArq){
+    private ResumoDadosArquivoTransacaoDTO salvarTrasacoes(List<DadosArquivoCargaTransacao> dadosArquivo,  int quantTransaArq){
 
-        AtomicInteger quantTrasaProce = new AtomicInteger();
+       // AtomicInteger quantTrasaProce = new AtomicInteger();
+
+        ResumoDadosArquivoTransacaoDTO dadosLog = new ResumoDadosArquivoTransacaoDTO();
+        dadosLog.setDadosComErro(new ArrayList<>());
+        dadosLog.setDadaosCadastrado(new ArrayList<>());
 
         dadosArquivo.forEach(dadosTransacao -> {
 
@@ -113,14 +117,18 @@ public class CargaTransacaoService {
                 transacao.setDescricao(dadosTransacao.getDescricao());
                 transacao.setValor(dadosTransacao.getValor());
                 transacao.setValorConvertido(calculoTransacoes.coversaoTransacao(dadosTransacao.getValor(), idTipo));
+              //  transacao.setValorConvertido(dadosTransacao.getValor());
                 transacao.setDataTransacao(dadosTransacao.getData().atTime(dadosTransacao.getHora()));
 
-                transacaoRepository.save(transacao);
-                quantTrasaProce.getAndIncrement();
+                Transacao transacaoSalva = transacaoRepository.save(transacao);
+               // quantTrasaProce.getAndIncrement();
+                dadosLog.getDadaosCadastrado().add(dadosTransacao);
+            }else {
+                dadosLog.getDadosComErro().addAll(dadosArquivo);
             }
         });
 
-        return "Aquivo com " + quantTransaArq + " trasações e foram cadastradas " + quantTrasaProce.get();
+        return dadosLog;
 
     }
 }
