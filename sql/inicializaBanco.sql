@@ -68,7 +68,7 @@ INSERT INTO perfil (id, tipo, descricao, data_criacao)
 VALUES(2, 'GERENTE', 'Usuario responsavel por administra correntistas', CURRENT_TIMESTAMP());
 
 INSERT INTO perfil (id, tipo, descricao, data_criacao)
-VALUES(3, 'CORRENTISTA', 'Usuario de da conta correte', CURRENT_TIMESTAMP());
+VALUES(3, 'CORRENTISTA', 'Usuario da conta correte', CURRENT_TIMESTAMP());
 
 
 INSERT INTO usuario(id, perfil_id, nome, cpf, data_criacao)
@@ -103,10 +103,10 @@ INSERT INTO conta (id, usuario_id, numero , digito, agencia , saldo, data_criaca
 values(2, 4, 22222, 2, 222, 20000, CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
-values(1, 'R$', 'Compra Cartão Debito', 1, 'DEBITO', CURRENT_TIMESTAMP());
+values(1, 'R$', 'Compra Cartao Debito', 1, 'DEBITO', CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
-values(2, 'R$', 'Compra Cartão Credito', 1, 'CREDITO', CURRENT_TIMESTAMP());
+values(2, 'R$', 'Compra Cartao Credito', 1, 'CREDITO', CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
 values(3, 'R$', 'PIX Enviar', 1, 'DEBITO', CURRENT_TIMESTAMP());
@@ -124,13 +124,13 @@ INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
 values(7, 'R$', 'Pagamento Aplicativo', 1, 'DEBITO', CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
-values(8, 'US$', 'Compra Cartão Credito Dolar', 1, 'DEBITO', CURRENT_TIMESTAMP());
+values(8, 'US$', 'Compra Cartao Credito Dolar', 1, 'DEBITO', CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
-values(9, '€', 'Compra Cartão Credito Euro', 1, 'DEBITO', CURRENT_TIMESTAMP());
+values(9, '€', 'Compra Cartao Credito Euro', 1, 'DEBITO', CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
-values(10, '¥', 'Compra Cartão Credito Iene', 1, 'DEBITO', CURRENT_TIMESTAMP());
+values(10, '¥', 'Compra Cartao Credito Iene', 1, 'DEBITO', CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
-values(11, '$', 'Compra Cartão Credito Peso Argentino', 1, 'DEBITO', CURRENT_TIMESTAMP());
+values(11, '$', 'Compra Cartao Credito Peso Argentino', 1, 'DEBITO', CURRENT_TIMESTAMP());
