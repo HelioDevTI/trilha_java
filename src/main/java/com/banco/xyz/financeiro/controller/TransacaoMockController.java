@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
 @RestController
 @RequestMapping("/transacao/mock")
 @SecurityRequirement(name = "bearerAPI")
@@ -30,7 +33,7 @@ public class TransacaoMockController {
 
     @PreAuthorize(PerfisUsuarios.ADMINISTRADOR)
     @PostMapping
-    public ResponseEntity<TransacaoRecord> salvarTransacaoMock(@RequestBody TransacaoDTO transacaoDTO){
+    public ResponseEntity<TransacaoRecord> salvarTransacaoMock(@RequestBody TransacaoDTO transacaoDTO) throws NoSuchAlgorithmException, KeyManagementException {
 
         TransacaoRecord transacaoRecord = transacaoMockService.salvarTransacao(transacaoDTO);
 

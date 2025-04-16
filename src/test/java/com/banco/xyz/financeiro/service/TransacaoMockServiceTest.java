@@ -16,6 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @SpringBootTest
@@ -33,7 +35,7 @@ public class TransacaoMockServiceTest {
 
 
     @Test
-    void salvarTransacaoTest(){
+    void salvarTransacaoTest() throws NoSuchAlgorithmException, KeyManagementException {
 
         BigDecimal valorConversao = new BigDecimal("999999.99");
 

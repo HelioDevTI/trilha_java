@@ -8,6 +8,8 @@ import com.banco.xyz.financeiro.repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Service
@@ -21,7 +23,7 @@ public class TransacaoMockService {
     private CalculoTransacoesMock calculoTransacoesMock;
 
 
-    public TransacaoRecord salvarTransacao(TransacaoDTO transacaoDTO){
+    public TransacaoRecord salvarTransacao(TransacaoDTO transacaoDTO) throws NoSuchAlgorithmException, KeyManagementException {
 
 
         Transacao transacao = new Transacao();

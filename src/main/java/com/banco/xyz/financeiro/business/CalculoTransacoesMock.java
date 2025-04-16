@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 @Component
 public class CalculoTransacoesMock {
@@ -21,7 +23,7 @@ public class CalculoTransacoesMock {
     private TipoTransacaoRepository tipoTransacaoRepository;
 
 
-    public BigDecimal calculoCambioMock(SiglasMoedas siglasMoedas, BigDecimal valor){
+    public BigDecimal calculoCambioMock(SiglasMoedas siglasMoedas, BigDecimal valor) throws NoSuchAlgorithmException, KeyManagementException {
 
         ApiCambioDTO cambioDTO = apiMockCambio.chamarAPIMockCambios();
 
@@ -44,7 +46,7 @@ public class CalculoTransacoesMock {
 
     }
 
-    public BigDecimal coversaoTransacaoMock(BigDecimal valor, Long idTipoTransacao){
+    public BigDecimal coversaoTransacaoMock(BigDecimal valor, Long idTipoTransacao) throws NoSuchAlgorithmException, KeyManagementException {
 
         String moeda = tipoTransacaoRepository.getReferenceById(idTipoTransacao).getMoeda();
 

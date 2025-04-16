@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/api/cambio")
@@ -51,7 +53,7 @@ public class APICambioController {
     }
 
     @GetMapping("/mock")
-    public ResponseEntity<ApiCambioDTO> consultaApiMock(){
+    public ResponseEntity<ApiCambioDTO> consultaApiMock() throws NoSuchAlgorithmException, KeyManagementException {
 
         return ResponseEntity.ok().body(apiMockCambio.chamarAPIMockCambios());
     }
@@ -59,7 +61,7 @@ public class APICambioController {
 
     @GetMapping("/externa/mock/valor/{valor}/moeda/{moeda}")
     public ResponseEntity<BigDecimal> consultaApiMockValor(@PathVariable("valor") BigDecimal valor,
-                                                           @PathVariable("moeda") SiglasMoedas moeda){
+                                                           @PathVariable("moeda") SiglasMoedas moeda) throws NoSuchAlgorithmException, KeyManagementException {
 
         return ResponseEntity.ok().body(calculoTransacoesMock.calculoCambioMock(moeda, valor));
     }

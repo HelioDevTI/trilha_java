@@ -32,6 +32,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 @WebMvcTest(APICambioController.class)
 @ActiveProfiles("test")
@@ -73,7 +75,7 @@ public class APICambioControllerTest {
     private static final String URL = "/api/cambio";
 
     @BeforeEach
-    void setUp(){
+    void setUp() throws NoSuchAlgorithmException, KeyManagementException {
 
         apiCambioDTO = ApiCambioDTOFactory.getApiCambioDTO();
         Mockito.when(apiExternaCambio.chamarAPIExternaCambios()).thenReturn(apiCambioDTO);

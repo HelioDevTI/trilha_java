@@ -18,6 +18,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -40,7 +42,7 @@ public class CalculoTransacoesMockTest {
     private ApiCambioDTO apiCambioDTO;
 
     @BeforeEach
-    void setUp(){
+    void setUp() throws NoSuchAlgorithmException, KeyManagementException {
 
         tipoTransacao = TipoTransacaoFactory.getTipoTransacao();
         apiCambioDTO = ApiCambioDTOFactory.getApiCambioDTO();
@@ -49,7 +51,7 @@ public class CalculoTransacoesMockTest {
     }
 
     @Test
-    void coversaoTransacaoMockDolarTest(){
+    void coversaoTransacaoMockDolarTest() throws NoSuchAlgorithmException, KeyManagementException {
 
          tipoTransacao.setMoeda(SiglasMoedas.DOLAR.getMoeda());
 
@@ -62,7 +64,7 @@ public class CalculoTransacoesMockTest {
 
 
     @Test
-    void coversaoTransacaoMockRealTest(){
+    void coversaoTransacaoMockRealTest() throws NoSuchAlgorithmException, KeyManagementException {
 
         Mockito.when(tipoTransacaoRepository.getReferenceById(1L)).thenReturn(tipoTransacao);
 
@@ -72,7 +74,7 @@ public class CalculoTransacoesMockTest {
     }
 
     @Test
-    void coversaoTransacaoMockEuroTest(){
+    void coversaoTransacaoMockEuroTest() throws NoSuchAlgorithmException, KeyManagementException {
 
         tipoTransacao.setMoeda(SiglasMoedas.EURO.getMoeda());
 
@@ -85,7 +87,7 @@ public class CalculoTransacoesMockTest {
 
 
     @Test
-    void coversaoTransacaoMockIeneTest(){
+    void coversaoTransacaoMockIeneTest() throws NoSuchAlgorithmException, KeyManagementException {
 
         tipoTransacao.setMoeda(SiglasMoedas.IENE.getMoeda());
 
@@ -97,7 +99,7 @@ public class CalculoTransacoesMockTest {
     }
 
     @Test
-    void coversaoTransacaoMockPesoTest(){
+    void coversaoTransacaoMockPesoTest() throws NoSuchAlgorithmException, KeyManagementException {
 
         tipoTransacao.setMoeda(SiglasMoedas.PESO_ARGENTINO.getMoeda());
 
