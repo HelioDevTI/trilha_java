@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +44,9 @@ public class CargaUsuarioService {
 
     @Autowired
     private ContaRepository contaRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public  List<DadosArquivoCargaUsuario> processarUsuarios(MultipartFile arquivo){
 
@@ -130,7 +134,7 @@ public class CargaUsuarioService {
            Login login = new Login();
            login.setIdUsuario(usuarioSalvo.getId());
            login.setEmail(usu.getEmail());
-           login.setSenha(usu.getSenha());
+           login.setSenha(passwordEncoder.encode(usu.getSenha()));
            login.setDataAutlizacao(dataAtual);
 
            loginRepository.save(login);
