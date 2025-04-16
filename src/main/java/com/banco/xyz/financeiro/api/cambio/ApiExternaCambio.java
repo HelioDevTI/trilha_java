@@ -4,6 +4,7 @@ import com.banco.xyz.financeiro.api.dto.ApiCambioDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,9 @@ public class ApiExternaCambio {
 
     @Value("${cambio.simbolos}")
     private String simbolos;
+
+    @Autowired
+    ApiMockCambio apiMockCambio;
 
 
     public ApiCambioDTO chamarAPIExternaCambios(){
@@ -75,6 +79,13 @@ public class ApiExternaCambio {
 
         } catch (IOException e)  {
             log.error("Erro  BufferedReade Erro = [{}]", e.getMessage());
+
+            //Se o erro For que excedeu a quantidade de solicitacao utiliza o MockAPI
+            if(e.getMessage().contains("code: 429")){
+                log.info("Utilizando Mock API Pois API Externa Atingiu a quantidade de Solicitacoes");
+                return apiMockCambio.chamarAPIMockCambios();
+            }
+
             throw new RuntimeException(e);
         } finally {
             assert connection != null;

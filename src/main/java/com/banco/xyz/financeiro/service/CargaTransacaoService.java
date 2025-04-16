@@ -45,7 +45,6 @@ public class CargaTransacaoService {
 
         List<DadosArquivoCargaTransacao>  listaDadosArquivo = new ArrayList<>();
 
-        int quantLinhaArq = 0;
 
         try(InputStream inputStream = arquivo.getInputStream();
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream)){
@@ -63,7 +62,6 @@ public class CargaTransacaoService {
                    continue;
 
                adicionaDadosArquivo(linha, listaDadosArquivo);
-               quantLinhaArq++;
 
            }
 
@@ -73,7 +71,7 @@ public class CargaTransacaoService {
 
 
 
-        return salvarTrasacoes(listaDadosArquivo, quantLinhaArq);
+        return salvarTrasacoes(listaDadosArquivo);
     }
 
     private void adicionaDadosArquivo(Row linha, List<DadosArquivoCargaTransacao> listaDadosArquivo){
@@ -95,7 +93,7 @@ public class CargaTransacaoService {
 
     }
 
-    private ResumoDadosArquivoTransacaoDTO salvarTrasacoes(List<DadosArquivoCargaTransacao> dadosArquivo,  int quantTransaArq){
+    private ResumoDadosArquivoTransacaoDTO salvarTrasacoes(List<DadosArquivoCargaTransacao> dadosArquivo){
 
        // AtomicInteger quantTrasaProce = new AtomicInteger();
 
@@ -117,7 +115,7 @@ public class CargaTransacaoService {
                 transacao.setDescricao(dadosTransacao.getDescricao());
                 transacao.setValor(dadosTransacao.getValor());
                 transacao.setValorConvertido(calculoTransacoes.coversaoTransacao(dadosTransacao.getValor(), idTipo));
-              //  transacao.setValorConvertido(dadosTransacao.getValor());
+                //  transacao.setValorConvertido(dadosTransacao.getValor());
                 transacao.setDataTransacao(dadosTransacao.getData().atTime(dadosTransacao.getHora()));
 
                 Transacao transacaoSalva = transacaoRepository.save(transacao);

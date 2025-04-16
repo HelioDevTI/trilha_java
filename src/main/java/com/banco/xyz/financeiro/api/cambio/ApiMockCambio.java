@@ -27,7 +27,7 @@ public class ApiMockCambio {
     private String API_MOCK_URL;
 
 
-    public ApiCambioDTO chamarAPIMockCambios() throws NoSuchAlgorithmException, KeyManagementException {
+    public ApiCambioDTO chamarAPIMockCambios(){
 
         ApiCambioDTO apiCambioDTO = new ApiCambioDTO();
 
@@ -37,10 +37,19 @@ public class ApiMockCambio {
         TrustManager[] trustAllCerts = new TrustManager[]{new TrustAllCertificates()};
 
         // Obter o contexto SSL padrão
-        SSLContext sslContext = SSLContext.getInstance("SSL");
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContext.getInstance("SSL");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
 
         // Inicializar o contexto SSL com o TrustManager que confia em todos os certificados
-        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        try {
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
 
         // Definir o SocketFactory para o HttpsURLConnection
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
