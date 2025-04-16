@@ -35,7 +35,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
             AND ( :descCompra IS NULL OR tr.descricao LIKE %:descCompra%)
             ORDER BY tr.dataTransacao
             """)
-    List<DadosTransacaoProxy> consultaTransacao(Long idConta, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
+    List<DadosTransacaoProxy> consultaTransacao(Long idUsuario, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
                                                 String descCompra);
 
     @Query("""

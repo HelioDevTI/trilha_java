@@ -47,7 +47,7 @@ public class TransacaoService {
                 tra.getDescricao(), tra.getValor(), tra.getValorConvertido(),  tra.getDataTransacao()));
     }
 
-    public List<DadosTransacaoProxy> consultaTransacao(Long idConta, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
+    public List<DadosTransacaoProxy> consultaTransacao(Long idUsuario, LocalDate dataInicio, LocalDate dataFim, String tipoTransacao,
                                                        String descCompra){
 
         if((dataInicio == null && dataFim != null) || (dataInicio != null && dataFim == null)){
@@ -62,7 +62,7 @@ public class TransacaoService {
 
         }
 
-     return transacaoRepository.consultaTransacao(idConta, dataInicio, dataFim, tipoTransacao, descCompra);
+     return transacaoRepository.consultaTransacao(idUsuario, dataInicio, dataFim, tipoTransacao, descCompra);
 
     }
 

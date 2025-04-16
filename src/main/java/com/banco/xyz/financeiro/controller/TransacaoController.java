@@ -49,13 +49,13 @@ public class TransacaoController {
     @PreAuthorize(PerfisUsuarios.CORRENTISTA)
     @GetMapping("/consulta")
     public ResponseEntity<List<DadosTransacaoProxy>> consultaTransacao(
-           @RequestParam("IdConta") Long idConta,
+           @RequestParam("idUsuario") Long idUsuario,
            @RequestParam(name = "dataIncio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd/MM/yyyy") LocalDate dataInicio,
            @RequestParam(name = "dataFim", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd/MM/yyyy") LocalDate dataFim,
            @RequestParam(name = "tipoTransacao", required = false) String tipoTransacao,
            @RequestParam(name = "descCompra", required = false) String descCompra){
 
-        return ResponseEntity.ok().body(transacaoService.consultaTransacao(idConta, dataInicio, dataFim, tipoTransacao, descCompra));
+        return ResponseEntity.ok().body(transacaoService.consultaTransacao(idUsuario, dataInicio, dataFim, tipoTransacao, descCompra));
     }
 
     @PreAuthorize(PerfisUsuarios.CORRENTISTA_GERENTE)
