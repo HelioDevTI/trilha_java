@@ -228,7 +228,7 @@ public class TransacaoControllerTest {
         Mockito.when(transacaoService.consultaTransacao(1L, null, null,
                 null, null)).thenReturn(listaTransa);
 
-        MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/consulta?IdConta=1"))
+        MvcResult json = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/consulta?idUsuario=1"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenCorren))
                 .andExpect(MockMvcResultMatchers.status().isOk())
