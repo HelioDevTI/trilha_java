@@ -97,10 +97,10 @@ INSERT INTO login (id, usuario_id, email, senha, data_login, data_atualizacao)
 values (4, 4, 'segundo.correntista@email.com', '$2a$04$YM6tYTfKN5X//bLtXz0..eNfO3YzjNy1aCpsxu04/TWAQr6zwyKMG', null, CURRENT_TIMESTAMP());
 
 INSERT INTO conta (id, usuario_id, numero , digito, agencia , saldo, data_criacao)
-values(1, 3, 11111, 1, 111, 10000, CURRENT_TIMESTAMP());
+values(1, 3, 11111, 1, 111, 100000.00, CURRENT_TIMESTAMP());
 
 INSERT INTO conta (id, usuario_id, numero , digito, agencia , saldo, data_criacao)
-values(2, 4, 22222, 2, 222, 20000, CURRENT_TIMESTAMP());
+values(2, 4, 22222, 2, 222, 200000.00, CURRENT_TIMESTAMP());
 
 INSERT INTO tipo_transacao (id, moeda, descricao, ativo, tipo, data_criacao)
 values(1, 'R$', 'Compra Cartao Debito', 1, 'DEBITO', CURRENT_TIMESTAMP());
